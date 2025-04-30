@@ -122,3 +122,34 @@ https://mirrors.ustc.edu.cn/anaconda/pkgs/main/
 
 https://mirrors.aliyun.com/anaconda/pkgs/free/
 https://mirrors.aliyun.com/anaconda/pkgs/main/
+
+# 包安装
+
+## 工具链配置
+### Visual Studio
+从源码编译安装通常需要Microsoft Visual C++编译器（如cl.exe）工具链。
+下载并安装Visual Studio Community，在安装过程中选择“使用C++的桌面开发”工作负载。
+
+设置环境变量以指向正确的MSVC工具链路径。可以通过运行vcvarsall.bat脚本来自动设置这些变量。
+
+运行`pip install -e . `为从本地源码安装包
+
+默认情况下，pip 在安装包时会为构建过程创建一个隔离的环境（即子进程）。这可能导致子进程无法访问父进程中的依赖项（如 torch）。通过使用 `--no-build-isolation` 选项禁用构建隔离，可以让构建过程直接使用当前环境中的包。
+
+### pip
+`python.exe -m pip install --upgrade pip`
+
+pip是Python的包管理工具，用于安装、更新和卸载Python包。
+
+### ninja
+ninja是一个构建系统，它使用一个简单的文本格式来描述构建规则，然后使用一个编译器来生成目标文件。
+
+### pybind11 
+是一个轻量级的头文件库，它主要用于将C++代码与Python进行绑定。
+
+pybind11是一个C++11/14/17的Python绑定库，它允许C++代码与Python进行交互。它提供了一种简单的方法来将C++函数和类暴露给Python，使得Python程序员可以轻松地调用C++代码。
+
+### setuptools 和 wheel
+这些是基本的打包工具，setuptools 用于构建扩展，而 wheel 支持创建预编译的二进制包（.whl 文件）。
+
+# [报错](./error.md)
