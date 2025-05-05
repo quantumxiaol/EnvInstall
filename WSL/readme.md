@@ -56,7 +56,7 @@ CUDA11.7
 
     wget https://developer.download.nvidia.com/compute/cuda/11.7.1/local_installers/cuda-repo-wsl-ubuntu-11-7-local_11.7.1-1_amd64.deb
     sudo dpkg -i cuda-repo-wsl-ubuntu-11-7-local_11.7.1-1_amd64.deb
-    sudo dpkg -i cuda-repo-wsl-ubuntu-11-7-local_11.7.1-1_amd64.deb
+    sudo cp /var/cuda-repo-wsl-ubuntu-11-7-local/cuda-96193861-keyring.gpg /usr/share/keyrings/
 
 安装 CUDA 工具包
 
@@ -87,8 +87,8 @@ CUDA11.7
 
 使用脚本安装
 
-    chmod +x Anaconda3-2023.07-1-Linux-x86_64.sh
-    ./Anaconda3-2023.07-1-Linux-x86_64.sh
+    chmod +x Anaconda3-2024.10-1-Linux-x86_64.sh
+    ./Anaconda3-2024.10-1-Linux-x86_64.sh
 默认安装路径为 ~/anaconda3
 
 初始化
