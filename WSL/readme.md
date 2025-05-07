@@ -56,7 +56,7 @@ CUDA11.7
 
     wget https://developer.download.nvidia.com/compute/cuda/11.7.1/local_installers/cuda-repo-wsl-ubuntu-11-7-local_11.7.1-1_amd64.deb
     sudo dpkg -i cuda-repo-wsl-ubuntu-11-7-local_11.7.1-1_amd64.deb
-    sudo cp /var/cuda-repo-wsl-ubuntu-11-7-local/cuda-96193861-keyring.gpg /usr/share/keyrings/
+    sudo cp /var/cuda-repo-wsl-ubuntu-11-7-local/cuda-*-keyring.gpg /usr/share/keyrings/
 
 安装 CUDA 工具包
 
@@ -116,3 +116,19 @@ You can undo this by running `conda init --reverse $SHELL`? [yes|no]
     eval "$(/home/quantum/anaconda3/bin/conda shell.bash hook)" 
     conda init
     source ~/.bashrc
+
+# 在WSL中使用代理
+当代理服务器运行在Windows上且监听localhost时，在WSL中直接访问这些代理可能会遇到问题，因为WSL不能直接通过localhost访问Windows上的服务。
+>wsl: 检测到 localhost 代理配置，但未镜像到 WSL。NAT 模式下的 WSL 不支持 localhost 代理。
+
+找到Windows主机的IP地址：
+在WSL中执行 ` hostname -I | awk '{print $1}' ` 获取Windows主机的IP地址：
+
+或者简单地使用172.16.17.32（对于大多数情况下的IPv4地址，这是WSL 2分配给Windows主机的默认网关地址）。
+
+使用找到的Windows主机IP地址而不是localhost来配置Git代理。
+
+    git config --global http.proxy 'http://172.16.17.32:代理端口号'
+    git config --global https.proxy 'http://172.16.17.32:代理端口号'
+
+或者可以windows下好包，在文件管理中拖到Linux中。
