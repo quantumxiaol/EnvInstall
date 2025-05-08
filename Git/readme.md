@@ -58,6 +58,107 @@ git clone --recurse-submodules [仓库地址]
 
 如果在不同的分支中只是添加了空行，而这些空行的添加没有导致实际内容在同一位置发生冲突，那么通常情况下 Git 不会产生冲突。
 
+# Git 进阶操作
+## 拉取远程更新并保留本地未提交的工作
+当在一个新分支上工作并创建了一些新文件但尚未提交，同时远程仓库有了新的更新（比如别人修复了bug），可以按照以下步骤来拉取最新的更改并保留本地未提交的工作：
+
+保存当前工作状态，如果已经对某些文件执行了 git add 但是还没有提交，可以使用 git stash 来保存这些更改。
+
+    git stash push -u
+这里的 -u 参数会包含未跟踪的文件（即新文件）到暂存区中一起保存。
+切换回主分支并拉取最新更新，然后从远程仓库拉取最新的更改。
+
+    git checkout main
+    git pull origin main
+切换回的特性分支并合并更改，并将主分支上的更改合并进来。
+
+    git checkout your-feature-branch
+    git merge main
+如果有冲突，根据提示解决冲突。
+恢复之前的工作，使用 `git stash pop` 来恢复之前保存的工作状态（包括新文件和已暂存的更改）。
+如果有冲突，Git 会通知你哪些文件存在冲突。需要手动编辑这些文件来解决冲突。
+
+## 分支操作
+### 创建分支
+创建一个新分支但不自动切换到该分支：
+
+    git branch <branch-name>
+创建并切换到新分支（常用）：
+
+    git checkout -b <branch-name>
+或者使用 Git 版本 2.23 及以上推荐的 switch 命令：
+
+    git switch -c <branch-name>
+### 切换分支
+切换到已有分支，checkout或者switch：
+
+    git checkout <branch-name>
+    git switch <branch-name>
+### 查看分支
+列出所有本地分支：
+
+    git branch
+列出所有远程和本地分支：
+
+    git branch -a
+查看当前分支及其最近提交的信息：
+
+    git branch -v
+### 合并分支
+将指定分支合并到当前分支：
+
+    git merge <branch-name>
+### 删除分支
+删除本地分支（需先切换出目标分支）：
+
+    git branch -d <branch-name>
+如果要强制删除未完全合并的分支：
+
+    git branch -D <branch-name>
+删除远程分支：
+
+    git push origin --delete <branch-name>
+### 更新分支信息
+从远程更新本地分支列表：
+
+    git fetch
+同步远程分支到本地（假设你想让本地分支与远程分支保持一致）：
+
+    git pull origin <branch-name>
+### 重命名分支
+重命名当前分支：
+
+    git branch -m <new-branch-name>
+重命名指定分支（需要先切换出目标分支）：
+
+    git branch -m <old-branch-name> <new-branch-name>
+### 变基（Rebase）
+变基是一种将一个分支上的更改应用到另一个分支之上的方法，它可以用来使提交历史更加线性。
+
+将当前分支变基到目标分支之上：
+
+    git rebase <target-branch>
+交互式变基（用于修改、压缩或重新排序提交）：
+
+    git rebase -i HEAD~n
+其中 n 表示你想要回顾的最近几次提交的数量。
+### 设置上游分支
+克隆了一个仓库后，默认情况下 origin/master 是 master 的上游分支。但是如果创建了一个新的本地分支，可能需要设置它的上游分支以便于推送和拉取操作。
+
+为本地分支设置上游分支：
+
+    git push --set-upstream origin <branch-name>
+简写形式：
+
+    git push -u origin <branch-name>
+### 比较分支
+比较两个分支之间的差异：
+
+    git diff <branch1>..<branch2>
+查看哪个分支包含了某个特定的提交：
+
+    git branch --contains <commit-id>
+
 ## 删除远程仓库的关联
     git remote remove origin
 
