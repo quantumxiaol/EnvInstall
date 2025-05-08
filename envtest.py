@@ -24,8 +24,16 @@ if "torch" in piplist:
     print("torch版本：", torch.__version__,"\n")
     print("CUDA是否可用：", torch.cuda.is_available(),"\n")
     print("torch的cuda构建版本：", torch.version.cuda,"\n")
+    print("torch的cuDNN是否可用：", torch.backends.cudnn.is_available(),"\n")    
     print("torch的cuDNN版本：", torch.backends.cudnn.version(),"\n")
-    print("torch的cuDNN是否可用：", torch.backends.cudnn.is_available(),"\n")
+    if torch.backends.mps.is_available():
+        print("torch的MPS是否可用：", torch.backends.mps.is_available(),"\n")
+    if torch.cuda.is_available():
+        print("torch的CUDA是否可用：", torch.cuda.is_available(),"\n")
+        print("torch的GPU数量：", torch.cuda.device_count(),"\n")
+    if torch.xpu.is_available():
+        print("torch的XPU是否可用：", torch.xpu.is_available(),"\n")
+        print("torch的XPU数量：", torch.xpu.device_count(),"\n")
 else:
     print("torch包不存在\n")
 
