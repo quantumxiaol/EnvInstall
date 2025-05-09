@@ -469,3 +469,135 @@ yacs                        0.1.8
 yarl                        1.20.0
 yarr                        0.1                      /home/quantumxiaol/ManiGaussian/third_party/YARR
 zipp                        3.21.0
+
+
+运行bash scripts/gen_demonstrations_all.sh
+
+>###Generating demonstrations for task: close_jar
+scripts/gen_demonstrations.sh: line 9: xvfb-run: command not found
+scripts/gen_demonstrations.sh: line 17: xvfb-run: command not found
+
+系统中缺少 xvfb-run 命令，这是 Xvfb（X Virtual Framebuffer） 的一部分，是一个虚拟显示服务器，常用于在没有图形界面的环境中运行需要 GUI 的程序（比如渲染器、机器人模拟器等）。
+
+  sudo apt update
+  sudo apt install -y xvfb
+
+>###Generating demonstrations for task: close_jar
+qt.qpa.plugin: Could not load the Qt platform plugin "xcb" in "/home/quantumxiaol/CoppeliaSim_Edu_V4_1_0_Ubuntu20_04" even though it was found.
+This application failed to start because no Qt platform plugin could be initialized. Reinstalling the application may fix this problem.
+Available platform plugins are: eglfs, linuxfb, minimal, minimalegl, offscreen, vnc, webgl, xcb.
+Fatal Python error: Aborted
+Current thread 0x0000710bc21e1640 (most recent call first):
+  File "/home/quantumxiaol/anaconda3/envs/manigaussian/lib/python3.9/site-packages/pyrep/backend/sim.py", line 46 in simExtLaunchUIThread
+  File "/home/quantumxiaol/anaconda3/envs/manigaussian/lib/python3.9/site-packages/pyrep/pyrep.py", line 55 in _run_ui_thread
+  File "/home/quantumxiaol/anaconda3/envs/manigaussian/lib/python3.9/threading.py", line 917 in run
+  File "/home/quantumxiaol/anaconda3/envs/manigaussian/lib/python3.9/threading.py", line 980 in _bootstrap_inner
+  File "/home/quantumxiaol/anaconda3/envs/manigaussian/lib/python3.9/threading.py", line 937 in _bootstrap
+Thread 0x0000710c0ab76740 (most recent call first):
+  File "/home/quantumxiaol/anaconda3/envs/manigaussian/lib/python3.9/site-packages/pyrep/pyrep.py", line 101 in launch
+  File "/home/quantumxiaol/ManiGaussian/third_party/RLBench/rlbench/environment.py", line 95 in launch
+  File "/home/quantumxiaol/ManiGaussian/third_party/RLBench/tools/nerf_dataset_generator.py", line 359 in run_all_variations
+  File "/home/quantumxiaol/ManiGaussian/third_party/RLBench/tools/nerf_dataset_generator.py", line 505 in main
+  File "/home/quantumxiaol/anaconda3/envs/manigaussian/lib/python3.9/site-packages/absl/app.py", line 261 in _run_main
+  File "/home/quantumxiaol/anaconda3/envs/manigaussian/lib/python3.9/site-packages/absl/app.py", line 316 in run
+  File "/home/quantumxiaol/ManiGaussian/third_party/RLBench/tools/nerf_dataset_generator.py", line 521 in <module>
+Aborted (core dumped)
+qt.qpa.plugin: Could not load the Qt platform plugin "xcb" in "/home/quantumxiaol/CoppeliaSim_Edu_V4_1_0_Ubuntu20_04" even though it was found.
+This application failed to start because no Qt platform plugin could be initialized. Reinstalling the application may fix this problem.
+Available platform plugins are: eglfs, linuxfb, minimal, minimalegl, offscreen, vnc, webgl, xcb.
+Fatal Python error: Aborted
+Current thread 0x0000782f8afe1640 (most recent call first):
+  File "/home/quantumxiaol/anaconda3/envs/manigaussian/lib/python3.9/site-packages/pyrep/backend/sim.py", line 46 in simExtLaunchUIThread
+  File "/home/quantumxiaol/anaconda3/envs/manigaussian/lib/python3.9/site-packages/pyrep/pyrep.py", line 55 in _run_ui_thread
+  File "/home/quantumxiaol/anaconda3/envs/manigaussian/lib/python3.9/threading.py", line 917 in run
+  File "/home/quantumxiaol/anaconda3/envs/manigaussian/lib/python3.9/threading.py", line 980 in _bootstrap_inner
+  File "/home/quantumxiaol/anaconda3/envs/manigaussian/lib/python3.9/threading.py", line 937 in _bootstrap
+Thread 0x0000782fcb7d6740 (most recent call first):
+  File "/home/quantumxiaol/anaconda3/envs/manigaussian/lib/python3.9/site-packages/pyrep/pyrep.py", line 101 in launch
+  File "/home/quantumxiaol/ManiGaussian/third_party/RLBench/rlbench/environment.py", line 95 in launch
+  File "/home/quantumxiaol/ManiGaussian/third_party/RLBench/tools/dataset_generator.py", line 345 in run_all_variations
+  File "/home/quantumxiaol/ManiGaussian/third_party/RLBench/tools/dataset_generator.py", line 445 in main
+  File "/home/quantumxiaol/anaconda3/envs/manigaussian/lib/python3.9/site-packages/absl/app.py", line 261 in _run_main
+  File "/home/quantumxiaol/anaconda3/envs/manigaussian/lib/python3.9/site-packages/absl/app.py", line 316 in run
+  File "/home/quantumxiaol/ManiGaussian/third_party/RLBench/tools/dataset_generator.py", line 461 in <module>
+Aborted (core dumped)
+
+Qt无法找到或初始化xcb平台插件
+
+  sudo apt-get install -y libx11-xcb1 libxcb-icccm4 libxcb-image0 libxcb-keysyms1 libxcb-render-util0 libxcb-shape0 libxcb-sync1 libxkbcommon-x11-0 libglu1-mesa
+
+>###Generating demonstrations for task: close_jar
+[NeRFTaskRecorder] num_views: 50
+  0%|                                                                                                                       | 0/200 [00:00<?, ?it/s]malloc(): unsorted double linked list corrupted
+Fatal Python error: Aborted
+Thread 0x000077cfd81ff640 (most recent call first):
+  File "/home/quantumxiaol/anaconda3/envs/manigaussian/lib/python3.9/threading.py", line 316 in wait
+  File "/home/quantumxiaol/anaconda3/envs/manigaussian/lib/python3.9/threading.py", line 581 in wait
+  File "/home/quantumxiaol/anaconda3/envs/manigaussian/lib/python3.9/site-packages/tqdm/_monitor.py", line 60 in run
+  File "/home/quantumxiaol/anaconda3/envs/manigaussian/lib/python3.9/threading.py", line 980 in _bootstrap_inner
+  File "/home/quantumxiaol/anaconda3/envs/manigaussian/lib/python3.9/threading.py", line 937 in _bootstrap
+Current thread 0x000077cfcf1e1640 (most recent call first):
+  File "/home/quantumxiaol/anaconda3/envs/manigaussian/lib/python3.9/site-packages/pyrep/backend/sim.py", line 46 in simExtLaunchUIThread
+  File "/home/quantumxiaol/anaconda3/envs/manigaussian/lib/python3.9/site-packages/pyrep/pyrep.py", line 55 in _run_ui_thread
+  File "/home/quantumxiaol/anaconda3/envs/manigaussian/lib/python3.9/threading.py", line 917 in run
+  File "/home/quantumxiaol/anaconda3/envs/manigaussian/lib/python3.9/threading.py", line 980 in _bootstrap_inner
+  File "/home/quantumxiaol/anaconda3/envs/manigaussian/lib/python3.9/threading.py", line 937 in _bootstrap
+Thread 0x000077d013abe740 (most recent call first):
+  File "/home/quantumxiaol/anaconda3/envs/manigaussian/lib/python3.9/site-packages/pyrep/backend/sim.py", line 245 in simHandleVisionSensor
+  File "/home/quantumxiaol/anaconda3/envs/manigaussian/lib/python3.9/site-packages/pyrep/objects/vision_sensor.py", line 119 in handle_explicitly
+  File "/home/quantumxiaol/ManiGaussian/third_party/RLBench/rlbench/backend/scene.py", line 228 in get_mask
+  File "/home/quantumxiaol/ManiGaussian/third_party/RLBench/rlbench/backend/scene.py", line 254 in get_observation
+  File "/home/quantumxiaol/ManiGaussian/third_party/RLBench/rlbench/task_environment.py", line 86 in reset
+  File "/home/quantumxiaol/ManiGaussian/third_party/RLBench/tools/nerf_dataset_generator.py", line 426 in run_all_variations
+  File "/home/quantumxiaol/ManiGaussian/third_party/RLBench/tools/nerf_dataset_generator.py", line 505 in main
+  File "/home/quantumxiaol/anaconda3/envs/manigaussian/lib/python3.9/site-packages/absl/app.py", line 261 in _run_main
+  File "/home/quantumxiaol/anaconda3/envs/manigaussian/lib/python3.9/site-packages/absl/app.py", line 316 in run
+  File "/home/quantumxiaol/ManiGaussian/third_party/RLBench/tools/nerf_dataset_generator.py", line 521 in <module>
+Aborted (core dumped)
+malloc(): unsorted double linked list corrupted
+Fatal Python error: Aborted
+
+问题可能与内存分配有关，特别是malloc(): unsorted double linked list corrupted这个错误提示表明在程序运行期间发生了堆损坏。这种情况通常由以下几种原因导致：
+
+并发访问冲突：多个线程同时尝试访问或修改相同的内存区域，而没有适当的同步机制。
+使用了已释放的内存：程序试图访问已经被释放的内存地址。
+缓冲区溢出：数组越界写入或其他形式的缓冲区溢出。
+
+执行`bash scripts/train_and_eval_w_geo_sem_dyna.sh ManiGaussian_BC 0,1 12345 close_jar`
+>(base) quantumxiaol@APL-Laptop:~/ManiGaussian$ conda activate manigaussian; CUDA_VISIBLE_DEVICES=0,1 python train.py method=ManiGaussian_BC rlbench.task_name=close_jar rlbench.demo_path=/home/quantumxiaol/ManiGaussian/data/train_data replay.path=/home/quantumxiaol/ManiGaussian/replay/close_jar framework.start_seed=0 framework.use_wandb=True method.use_wandb=True framework.wandb_group=close_jar framework.wandb_name=close_jar ddp.num_devices=2 replay.batch_size=1 ddp.master_port=12345 rlbench.tasks=[close_jar,open_drawer,sweep_to_dustpan_of_size,meat_off_grill,turn_tap,slide_block_to_color_target,put_item_in_drawer,reach_and_drag,push_buttons,stack_blocks] rlbench.demos=20 method.neural_renderer.render_freq=2000 method.neural_renderer.lambda_embed=0.01 method.neural_renderer.lambda_dyna=0.1 method.neural_renderer.lambda_reg=0.0 method.neural_renderer.foundation_model_name=diffusion method.neural_renderer.use_dynamic_field=True
+Traceback (most recent call last):
+  File "/home/quantumxiaol/ManiGaussian/train.py", line 31, in <module>
+    import run_seed_fn
+  File "/home/quantumxiaol/ManiGaussian/run_seed_fn.py", line 14, in <module>
+    from yarr.runners.offline_train_runner import OfflineTrainRunner
+  File "/home/quantumxiaol/ManiGaussian/third_party/YARR/yarr/runners/offline_train_runner.py", line 30, in <module>
+    from lightning.fabric import Fabric
+  File "/home/quantumxiaol/anaconda3/envs/manigaussian/lib/python3.9/site-packages/lightning/__init__.py", line 18, in <module>
+    from lightning.fabric.fabric import Fabric  # noqa: E402
+  File "/home/quantumxiaol/anaconda3/envs/manigaussian/lib/python3.9/site-packages/lightning/fabric/__init__.py", line 7, in <module>
+    from lightning_utilities.core.imports import package_available
+ModuleNotFoundError: No module named 'lightning_utilities'
+> /home/quantumxiaol/anaconda3/envs/manigaussian/lib/python3.9/site-packages/lightning/fabric/__init__.py(7)<module>()
+-> from lightning_utilities.core.imports import package_available
+
+缺少 lightning_utilities
+
+>    @torch.compiler.disable
+AttributeError: module 'torch' has no attribute 'compiler'
+> /home/quantumxiaol/anaconda3/envs/manigaussian/lib/python3.9/site-packages/lightning/pytorch/trainer/connectors/logger_connector/result.py(355)_ResultCollection()
+-> @torch.compiler.disable
+
+AttributeError: module 'torch' has no attribute 'compiler'
+
+python -c "import torch; print(torch.__version__); print(hasattr(torch, 'compiler'))"
+2.0.0
+False
+
+使用的 PyTorch 构建版本 不是完整支持 TorchDynamo / compile 的构建；是 CPU-only 版本 或者 从非官方源（如清华镜像）安装的精简版/损坏版；
+或者是 构建时未启用 torch.compile 所需依赖（如 Triton）。
+
+torch.compiler 是 PyTorch 中与 TorchDynamo 相关的功能模块，它是在 PyTorch 2.0 中引入的一个实验性特性。TorchDynamo 是一个用于动态追踪 Python 函数的框架，旨在为 PyTorch 提供更高效的执行路径和优化机会。通过 torch.compile() 功能，用户可以对模型进行编译，从而可能获得更快的推理速度或训练性能。
+
+torch.compile() 的作用
+加速计算：通过对模型进行编译，利用后端优化器（如 NVRTC、Triton 等）来生成更高效的 CUDA 内核。
+动态追踪：允许在运行时动态地捕获和优化操作序列，这有助于提高灵活性和效率。

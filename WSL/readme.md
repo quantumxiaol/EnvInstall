@@ -132,3 +132,18 @@ You can undo this by running `conda init --reverse $SHELL`? [yes|no]
     git config --global https.proxy 'http://172.16.17.32:代理端口号'
 
 或者可以windows下好包，在文件管理中拖到Linux中。
+
+# 查看WSL 2的资源使用情况
+对于正在运行的WSL 2实例，你可以使用Linux命令来查看内存和CPU的使用情况。例如：
+
+使用`top`或`htop`（如果已安装）查看实时的资源使用情况。
+使用`free -m`查看总的和可用的内存。
+使用`cat /proc/meminfo`获取详细的内存信息。
+但是，这些命令仅能显示当前使用的资源量，并不能直接显示分配给WSL 2的最大资源限制。
+
+要查看或设置分配给WSL 2的资源限制（如内存、处理器和交换空间），需要编辑.wslconfig文件。这个文件一般放在用户目录下（即C:\Users\<用户名>\），其格式如下：
+
+    memory=4GB   # 分配给WSL 2的内存
+    processors=4 # 可以使用的处理器核心数
+    swap=2GB     # 交换分区大小
+    localhostForwarding=true # 允许本地主机转发
