@@ -425,6 +425,101 @@ torch.compile() 的作用
 加速计算：通过对模型进行编译，利用后端优化器（如 NVRTC、Triton 等）来生成更高效的 CUDA 内核。
 动态追踪：允许在运行时动态地捕获和优化操作序列，这有助于提高灵活性和效率。
 
+运行训练脚本：`bash scripts/train_and_eval_w_geo_sem_dyna.sh ManiGaussian_BC 0 12345 close_jar`，能够开始训练。
+
+运行CoppeliaSim: `./coppeliasim.sh`，可以正常显示图形界面
+
+运行RLBench，在CoppeliaSim中显示closejar任务，内存错误
+
+Error: signal 11:
+
+/home/quantumxiaol/CoppeliaSim_Edu_V4_1_0_Ubuntu20_04/libcoppeliaSim.so.1(_Z11_segHandleri+0x30)[0x70851ef0aae0]
+/lib/x86_64-linux-gnu/libc.so.6(+0x42520)[0x708571242520]
+/usr/lib/x86_64-linux-gnu/dri/swrast_dri.so(+0x1888d40)[0x70850b688d40]
+QMutex: destroying locked mutex
+
+这个错误是由 CoppeliaSim 的 Qt GUI 渲染部分引发的。
+
+问题应该不在仿真软件上，也不是内存太小，我分给WSL2 16GB内存，应该够用。
+
+CoppeliaSim 是基于 Qt 和 OpenGL 的 GUI 应用程序。而 RLBench 启动 CoppeliaSim 作为子进程，并尝试与其通信、渲染画面，这就可能导致以下问题：
+
+Qt GUI 必须运行在主线程中，但 RLBench 可能是在子线程中创建了 GUI 上下文。
+OpenGL 上下文初始化失败或与 Mesa 软件渲染器不兼容。
+
+使用gdb检测
+
+>(gdb) run
+Starting program: /home/quantumxiaol/anaconda3/envs/manigaussian/bin/python /home/quantumxiaol/fix_demo.py
+[Thread debugging using libthread_db enabled]
+Using host libthread_db library "/lib/x86_64-linux-gnu/libthread_db.so.1".
+[New Thread 0x7ffff47ff640 (LWP 68549)]
+[New Thread 0x7ffff1ffe640 (LWP 68550)]
+[New Thread 0x7fffef7fd640 (LWP 68551)]
+[New Thread 0x7fffecffc640 (LWP 68552)]
+[New Thread 0x7fffea7fb640 (LWP 68553)]
+[New Thread 0x7fffe7ffa640 (LWP 68554)]
+[New Thread 0x7fffe57f9640 (LWP 68555)]
+[New Thread 0x7fffe2ff8640 (LWP 68556)]
+[New Thread 0x7fffe07f7640 (LWP 68557)]
+[New Thread 0x7fffdfff6640 (LWP 68558)]
+[New Thread 0x7fffdb7f5640 (LWP 68559)]
+[New Thread 0x7fffd8ff4640 (LWP 68560)]
+[New Thread 0x7fffd67f3640 (LWP 68561)]
+[New Thread 0x7fffd5ff2640 (LWP 68562)]
+[New Thread 0x7fffd37f1640 (LWP 68563)]
+[New Thread 0x7fffceff0640 (LWP 68564)]
+[New Thread 0x7fffce7ef640 (LWP 68565)]
+[New Thread 0x7fffcbfee640 (LWP 68566)]
+[New Thread 0x7fffc77ed640 (LWP 68567)]
+[New Thread 0x7fffc4fec640 (LWP 68568)]
+[New Thread 0x7fffc27eb640 (LWP 68569)]
+[New Thread 0x7fffbffea640 (LWP 68570)]
+[New Thread 0x7fffbf7e9640 (LWP 68571)]
+[New Thread 0x7fffbcfe8640 (LWP 68572)]
+[New Thread 0x7fffba7e7640 (LWP 68573)]
+[New Thread 0x7fffb7fe6640 (LWP 68574)]
+[New Thread 0x7fffb37e5640 (LWP 68575)]
+[New Thread 0x7fffb0fe4640 (LWP 68576)]
+[New Thread 0x7fffae7e3640 (LWP 68577)]
+[New Thread 0x7fffabfe2640 (LWP 68578)]
+[New Thread 0x7fffa97e1640 (LWP 68579)]
+[New Thread 0x7fff9fdff640 (LWP 68580)]
+[New Thread 0x7fff9e7d3640 (LWP 68607)]
+[Detaching after vfork from child process 68644]
+[New Thread 0x7fff7bfa4640 (LWP 68646)]
+[New Thread 0x7fff7b3a3640 (LWP 68647)]
+[New Thread 0x7fff7aba2640 (LWP 68648)]
+[New Thread 0x7fff7a3a1640 (LWP 68649)]
+[New Thread 0x7fff79ba0640 (LWP 68650)]
+[New Thread 0x7fff63fff640 (LWP 68651)]
+[New Thread 0x7fff637fe640 (LWP 68658)]
+[New Thread 0x7fff503ff640 (LWP 68755)]
+[New Thread 0x7fff4549f640 (LWP 68756)]
+Thread 33 "python" received signal SIGSEGV, Segmentation fault.
+[Switching to Thread 0x7fff9fdff640 (LWP 68580)]
+0x00007fff89025f7d in ?? () from /usr/lib/x86_64-linux-gnu/dri/swrast_dri.so
+
+>(gdb)  bt full
+#0  0x00007fff89025f7d in ?? () from /usr/lib/x86_64-linux-gnu/dri/swrast_dri.so
+No symbol table info available.
+#1  0x0000000000000000 in ?? ()
+No symbol table info available.
+
+崩溃确实发生在 Mesa 的软件渲染模块 swrast_dri.so 中
+有时界面会加载出来，显示任务场景，但随后闪退，报一模一样的错误。
+
+利用 Windows 上的 X Server（如 VcXsrv）将 WSL2 的图形界面转发到 Windows 桌面。
+
+>export DISPLAY=$(grep -oP '(?<=nameserver ).+' /etc/resolv.conf):0
+(manigaussian) (base) quantumxiaol@APL-Laptop:~$ /home/quantumxiaol/anaconda3/envs/manigaussian/bin/python /home/quantumxiaol/fix_demo.py
+qt.qpa.xcb: could not connect to display 10.255.255.254:0
+qt.qpa.plugin: Could not load the Qt platform plugin "xcb" in "/home/quantumxiaol/CoppeliaSim_Edu_V4_1_0_Ubuntu20_04" even though it was found.
+This application failed to start because no Qt platform plugin could be initialized. Reinstalling the application may fix this problem.
+Available platform plugins are: eglfs, linuxfb, minimal, minimalegl, offscreen, vnc, webgl, xcb.
+Aborted (core dumped)
+
+CoppeliaSim中的qt是5.12.5编译的，但是不存在libqxcb.so。所以没法使用转发。
 
 # Install on WSL
 #### [WSL installation](../WSL/readme.md)
