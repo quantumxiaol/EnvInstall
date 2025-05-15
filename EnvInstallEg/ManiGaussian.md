@@ -7,7 +7,9 @@ https://github.com/GuanxingLu/ManiGaussian/blob/main/docs/INSTALL.md
 作者自己在搞docker，但很显然他目前还没有成功，这个环境确实复杂，他们在Ubuntu上就行了尝试
 
 # 总结
-不要在Windows上安装，PyRep4.0.2应该只能在Linux上运行。
+不要在Windows上安装，PyRep4.0.2只能在Linux上运行。尽管coppeliasim可以在Windows上使用。
+
+PyRep需要4.1.0的coppeliasim。
 
 虚拟环境名称需要manigaussian，后续的测试训练脚本是硬编码的。
 
@@ -18,6 +20,123 @@ https://github.com/GuanxingLu/ManiGaussian/blob/main/docs/INSTALL.md
 安装 lightning会自动下最新的，从而顶掉torch变成cpu版本，需要指定lightning版本为2.2.1。
 
 特别注意不要使用conda安装torch，后面安装包有的会自动用pip修改torch，导致出现包对不上的问题。
+
+# Install on WSL
+#### [WSL installation](../WSL/readme.md)
+安装WSL2，我使用了22.04，从coppeliarobotics来看，4.1.0支持ubuntu16.04、18.04、20.04；CUDA使用了11.7。
+#### 0 clone the repo and create env
+
+    git clone https://github.com/GuanxingLu/ManiGaussian.git
+
+    # [Optional] We have wrapped (modified) third party packages into this repo, so it might be oversized. To address this, run:
+    # git config --global http.postBuffer 104857600 
+
+    conda remove -n manigaussian --all
+    conda create -n manigaussian python=3.9
+    conda activate manigaussian
+
+#### Install pytorch
+
+    ~conda install pytorch==1.10.0 torchvision torchaudio cudatoolkit=11.3 -c pytorch~
+    pip install torch==1.10.0+cu113 torchvision==0.11.1+cu113 torchaudio==0.10.0+cu113 --extra-index-url https://download.pytorch.org/whl/cu113
+
+
+#### install pytorch3d
+    cd ..
+    git clone https://github.com/facebookresearch/pytorch3d.git
+    cd pytorch3d
+    conda install -c fvcore -c iopath -c conda-forge fvcore iopath
+    pip install -e .
+    cd ../ManiGaussian
+
+#### install CLIP
+    cd ..
+    git clone https://github.com/openai/CLIP.git
+    cd CLIP
+    pip install -e .
+    cd ../ManiGaussian
+    pip install open-clip-torch
+
+#### download coppeliasim and add path to env
+Download CoppeliaSim from https://www.coppeliarobotics.com/previousVersions,currently only edu version on 4.1.0 is available.
+
+    wget https://downloads.coppeliarobotics.com/V4_1_0/CoppeliaSim_Edu_V4_1_0_Ubuntu20_04.tar.xz
+    tar -xf CoppeliaSim_Edu_V4_1_0_Ubuntu20_04.tar.xz
+    rm CoppeliaSim_Player_V4_1_0_Ubuntu18_04.tar.xz
+add path to bashrc
+
+    vim ~/.bashrc
+    export COPPELIASIM_ROOT=EDIT/ME/PATH/TO/COPPELIASIM/INSTALL/DIR
+    export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:$COPPELIASIM_ROOT
+    export QT_QPA_PLATFORM_PLUGIN_PATH=$COPPELIASIM_ROOT
+
+source your bashrc `source ~/.bashrc`
+
+#### install PyRep
+    cd third_party/PyRep
+    pip install -r requirements.txt
+    pip install .
+    cd ../..
+
+#### install RLBench
+    cd third_party/RLBench
+    pip install -r requirements.txt
+    python setup.py develop
+    cd ../..
+
+#### install YARR
+
+    cd third_party/YARR
+    pip install -r requirements.txt
+    python setup.py develop
+    cd ../..
+
+#### install ManiGaussian requirements
+    pip install "pip<24.1"
+    pip install -r requirements.txt
+
+#### install other utility packages
+    pip install packaging==21.3 dotmap pyhocon wandb==0.14.0 chardet opencv-python-headless gpustat ipdb visdom sentencepiece
+
+### install odise
+    pip install "setuptools<59"
+Install xformers (this version is a must to avoid errors from detectron2)
+
+    pip install xformers==0.0.18 
+Install detectron2:
+
+    cd ..
+    git clone https://github.com/facebookresearch/detectron2.git
+    cd detectron2
+    pip install -e .
+    cd ../ManiGaussian
+Install ODISE packages
+
+    cd third_party/ODISE
+    pip install -e .
+    cd ../..
+
+#### fix some possible problems
+Since a lot of packages are installed, there are some possible bugs. Use these commands first before running the code.
+
+    ~conda install pytorch==2.0.0 torchvision==0.15.0 torchaudio==2.0.0 pytorch-cuda=11.7 -c pytorch -c nvidia~
+    pip install -i https://pypi.tuna.tsinghua.edu.cn/simple torch==2.0.0+cu117 torchvision==0.15.0+cu117 torchaudio==2.0.0 --extra-index-url https://download.pytorch.org/whl/cu117
+
+    pip install hydra-core==1.1
+    pip install opencv-python-headless
+    pip install numpy==1.23.5
+    ~pip install numpy==1.26.4~
+
+#### install Gaussian Splatting Renderer
+    cd third_party/gaussian-splatting/
+    pip install -e submodules/diff-gaussian-rasterization
+    pip install -e submodules/simple-knn
+    cd ../..
+
+#### install Lightning Fabric
+不指定版本号会下载最新的lightning，这样会自动更新torch到2.4的cpu版本。
+    pip install lightning==2.2.1
+
 
 # 踩坑记录
 
@@ -521,118 +640,121 @@ Aborted (core dumped)
 
 CoppeliaSim中的qt是5.12.5编译的，但是不存在libqxcb.so。所以没法使用转发。
 
-# Install on WSL
-#### [WSL installation](../WSL/readme.md)
-安装WSL2，我使用了22.04，从coppeliarobotics来看，4.1.0支持ubuntu16.04、18.04、20.04；CUDA使用了11.7。
-#### 0 clone the repo and create env
+运行`python scripts/compute_results.py --file_paths logs/gs_rgb_emb_001_dyna_01_0305/seed0/eval_data.csv --method last`测试 `pip install termcolor`安装termcolor，是终端输出颜色
 
-    git clone https://github.com/GuanxingLu/ManiGaussian.git
+>df_returns
+     step  close_jar  open_drawer  sweep_to_dustpan_of_size  meat_off_grill  turn_tap  slide_block_to_color_target  put_item_in_drawer  reach_and_drag  push_buttons  stack_blocks
+0   70000       28.0         64.0                      48.0            52.0      56.0                          8.0                 4.0            80.0          16.0           8.0
+1   80000       44.0         64.0                      44.0            48.0      48.0                          4.0                 8.0            92.0          12.0          16.0
+2   90000       16.0         68.0                      64.0            60.0      56.0                          8.0                12.0            84.0          12.0          16.0
+3  100000       28.0         76.0                      64.0            60.0      56.0                         24.0                16.0            92.0          20.0          12.0
+4  100000       28.0         68.0                      56.0            60.0      44.0                          8.0                12.0            88.0          28.0           0.0
+5  100000       28.0         56.0                      64.0            64.0      48.0                         24.0                 8.0            88.0          12.0           0.0
+6   90000       20.0         76.0                      56.0            60.0      52.0                          8.0                12.0            80.0          20.0          12.0
+7  100000       32.0         68.0                      64.0            64.0      48.0                         16.0                 8.0            92.0          20.0           0.0
+df_returns_cat
+     step  Planning  Long  Tools  Motion  Screw  Occulusion
+0   70000      34.0   6.0   45.3    56.0   28.0        64.0
+1   80000      30.0  12.0   46.7    48.0   44.0        64.0
+2   90000      36.0  14.0   52.0    56.0   16.0        68.0
+3  100000      40.0  14.0   60.0    56.0   28.0        76.0
+4  100000      44.0   6.0   50.7    44.0   28.0        68.0
+5  100000      38.0   4.0   58.7    48.0   28.0        56.0
+6   90000      40.0  12.0   48.0    52.0   20.0        76.0
+7  100000      42.0   4.0   57.3    48.0   32.0        68.0
+last_checkpoint: 3
+Average return over all seeds: 44.80
+Standard deviation over all seeds: 0.00
 
-    # [Optional] We have wrapped (modified) third party packages into this repo, so it might be oversized. To address this, run:
-    # git config --global http.postBuffer 104857600 
+运行生成数据的脚本`bash scripts/gen_demonstrations_all.sh`
 
-    conda remove -n manigaussian --all
-    conda create -n manigaussian python=3.9
-    conda activate manigaussian
+>task=${1}
+cd third_party/RLBench/tools
+xvfb-run -a python nerf_dataset_generator.py --tasks=${task} \
+                            --save_path="../../../data/train_data" \
+                            --image_size=128,128 \
+                            --renderer=opengl \
+                            --episodes_per_task=20 \
+                            --processes=1 \
+                            --all_variations=True
+xvfb-run -a python dataset_generator.py --tasks=${task} \
+                            --save_path="../../../data/test_data" \
+                            --image_size=128,128 \
+                            --renderer=opengl \
+                            --episodes_per_task=25 \
+                            --processes=1 \
+                            --all_variations=True
 
-#### Install pytorch
+报错
 
-    ~conda install pytorch==1.10.0 torchvision torchaudio cudatoolkit=11.3 -c pytorch~
-    pip install torch==1.10.0+cu113 torchvision==0.11.1+cu113 torchaudio==0.10.0+cu113 --extra-index-url https://download.pytorch.org/whl/cu113
+>###Generating demonstrations for task: close_jar
+[NeRFTaskRecorder] num_views: 50
+  0%|                                                                                                                          | 0/200 [00:00<?, ?it/s]malloc(): unsorted double linked list corrupted
+Fatal Python error: Aborted
+Thread 0x0000767857fff640 (most recent call first):
+  File "/home/quantumxiaol/anaconda3/envs/manigaussian/lib/python3.9/threading.py", line 316 in wait
+  File "/home/quantumxiaol/anaconda3/envs/manigaussian/lib/python3.9/threading.py", line 581 in wait
+  File "/home/quantumxiaol/anaconda3/envs/manigaussian/lib/python3.9/site-packages/tqdm/_monitor.py", line 60 in run
+  File "/home/quantumxiaol/anaconda3/envs/manigaussian/lib/python3.9/threading.py", line 980 in _bootstrap_inner
+  File "/home/quantumxiaol/anaconda3/envs/manigaussian/lib/python3.9/threading.py", line 937 in _bootstrap
+Current thread 0x000076787f3e1640 (most recent call first):
+  File "/home/quantumxiaol/ManiGaussian/third_party/PyRep/pyrep/backend/sim.py", line 46 in simExtLaunchUIThread
+  File "/home/quantumxiaol/ManiGaussian/third_party/PyRep/pyrep/pyrep.py", line 55 in _run_ui_thread
+  File "/home/quantumxiaol/anaconda3/envs/manigaussian/lib/python3.9/threading.py", line 917 in run
+  File "/home/quantumxiaol/anaconda3/envs/manigaussian/lib/python3.9/threading.py", line 980 in _bootstrap_inner
+  File "/home/quantumxiaol/anaconda3/envs/manigaussian/lib/python3.9/threading.py", line 937 in _bootstrap
+Thread 0x00007678c7d08740 (most recent call first):
+  File "/home/quantumxiaol/ManiGaussian/third_party/PyRep/pyrep/backend/sim.py", line 245 in simHandleVisionSensor
+  File "/home/quantumxiaol/ManiGaussian/third_party/PyRep/pyrep/objects/vision_sensor.py", line 119 in handle_explicitly
+  File "/home/quantumxiaol/ManiGaussian/third_party/RLBench/rlbench/backend/scene.py", line 228 in get_mask
+  File "/home/quantumxiaol/ManiGaussian/third_party/RLBench/rlbench/backend/scene.py", line 254 in get_observation
+  File "/home/quantumxiaol/ManiGaussian/third_party/RLBench/rlbench/task_environment.py", line 86 in reset
+  File "/home/quantumxiaol/ManiGaussian/third_party/RLBench/tools/nerf_dataset_generator.py", line 426 in run_all_variations
+  File "/home/quantumxiaol/ManiGaussian/third_party/RLBench/tools/nerf_dataset_generator.py", line 505 in main
+  File "/home/quantumxiaol/anaconda3/envs/manigaussian/lib/python3.9/site-packages/absl/app.py", line 258 in _run_main
+  File "/home/quantumxiaol/anaconda3/envs/manigaussian/lib/python3.9/site-packages/absl/app.py", line 312 in run
+  File "/home/quantumxiaol/ManiGaussian/third_party/RLBench/tools/nerf_dataset_generator.py", line 521 in <module>
+Aborted (core dumped)
+malloc(): unsorted double linked list corrupted
+Fatal Python error: Aborted
+Current thread 0x00007e2af61e1640 (most recent call first):
+  File "/home/quantumxiaol/ManiGaussian/third_party/PyRep/pyrep/backend/sim.py", line 46 in simExtLaunchUIThread
+  File "/home/quantumxiaol/ManiGaussian/third_party/PyRep/pyrep/pyrep.py", line 55 in _run_ui_thread
+  File "/home/quantumxiaol/anaconda3/envs/manigaussian/lib/python3.9/threading.py", line 917 in run
+  File "/home/quantumxiaol/anaconda3/envs/manigaussian/lib/python3.9/threading.py", line 980 in _bootstrap_inner
+  File "/home/quantumxiaol/anaconda3/envs/manigaussian/lib/python3.9/threading.py", line 937 in _bootstrap
+Thread 0x00007e2b42a42740 (most recent call first):
+  File "/home/quantumxiaol/ManiGaussian/third_party/PyRep/pyrep/backend/sim.py", line 245 in simHandleVisionSensor
+  File "/home/quantumxiaol/ManiGaussian/third_party/PyRep/pyrep/objects/vision_sensor.py", line 119 in handle_explicitly
+  File "/home/quantumxiaol/ManiGaussian/third_party/RLBench/rlbench/backend/scene.py", line 228 in get_mask
+  File "/home/quantumxiaol/ManiGaussian/third_party/RLBench/rlbench/backend/scene.py", line 256 in get_observation
+  File "/home/quantumxiaol/ManiGaussian/third_party/RLBench/rlbench/task_environment.py", line 86 in reset
+  File "/home/quantumxiaol/ManiGaussian/third_party/RLBench/tools/dataset_generator.py", line 378 in run_all_variations
+  File "/home/quantumxiaol/ManiGaussian/third_party/RLBench/tools/dataset_generator.py", line 445 in main
+  File "/home/quantumxiaol/anaconda3/envs/manigaussian/lib/python3.9/site-packages/absl/app.py", line 258 in _run_main
+  File "/home/quantumxiaol/anaconda3/envs/manigaussian/lib/python3.9/site-packages/absl/app.py", line 312 in run
+  File "/home/quantumxiaol/ManiGaussian/third_party/RLBench/tools/dataset_generator.py", line 461 in <module>
+Aborted (core dumped)
 
+PyRep / RLBench 在渲染或传感器采集阶段崩溃
+从调用栈来看，崩溃发生在：simHandleVisionSensor -> get_mask -> get_observation -> reset
 
-#### install pytorch3d
-    cd ..
-    git clone https://github.com/facebookresearch/pytorch3d.git
-    cd pytorch3d
-    conda install -c fvcore -c iopath -c conda-forge fvcore iopath
-    pip install -e .
-    cd ../ManiGaussian
+将渲染器改为opengl3，报错发生变化
 
-#### install CLIP
-    cd ..
-    git clone https://github.com/openai/CLIP.git
-    cd CLIP
-    pip install -e .
-    cd ../ManiGaussian
-    pip install open-clip-torch
+>###Generating demonstrations for task: close_jar
+[NeRFTaskRecorder] num_views: 50
+  0%|                                                                                                                          | 0/200 [00:00<?, ?it/s]
+Error: signal 11:
+/home/quantumxiaol/CoppeliaSim_Edu_V4_1_0_Ubuntu20_04/libcoppeliaSim.so.1(_Z11_segHandleri+0x30)[0x76d74ab0aae0]
+/lib/x86_64-linux-gnu/libc.so.6(+0x42520)[0x76d79ce42520]
+/usr/lib/x86_64-linux-gnu/dri/swrast_dri.so(+0xc25f7d)[0x76d722a25f7d]
+QMutex: destroying locked mutex
+Error: signal 11:
+/home/quantumxiaol/CoppeliaSim_Edu_V4_1_0_Ubuntu20_04/libcoppeliaSim.so.1(_Z11_segHandleri+0x30)[0x74874030aae0]
+/lib/x86_64-linux-gnu/libc.so.6(+0x42520)[0x748792442520]
+/usr/lib/x86_64-linux-gnu/dri/swrast_dri.so(+0xc25f7d)[0x748721a25f7d]
+QMutex: destroying locked mutex
 
-#### download coppeliasim and add path to env
-Download CoppeliaSim from https://www.coppeliarobotics.com/previousVersions,currently only edu version on 4.1.0 is available.
-
-    wget https://downloads.coppeliarobotics.com/V4_1_0/CoppeliaSim_Edu_V4_1_0_Ubuntu20_04.tar.xz
-    tar -xf CoppeliaSim_Edu_V4_1_0_Ubuntu20_04.tar.xz
-    rm CoppeliaSim_Player_V4_1_0_Ubuntu18_04.tar.xz
-add path to bashrc
-
-    vim ~/.bashrc
-    export COPPELIASIM_ROOT=EDIT/ME/PATH/TO/COPPELIASIM/INSTALL/DIR
-    export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:$COPPELIASIM_ROOT
-    export QT_QPA_PLATFORM_PLUGIN_PATH=$COPPELIASIM_ROOT
-
-source your bashrc `source ~/.bashrc`
-
-#### install PyRep
-    cd third_party/PyRep
-    pip install -r requirements.txt
-    pip install .
-    cd ../..
-
-#### install RLBench
-    cd third_party/RLBench
-    pip install -r requirements.txt
-    python setup.py develop
-    cd ../..
-
-#### install YARR
-
-    cd third_party/YARR
-    pip install -r requirements.txt
-    python setup.py develop
-    cd ../..
-
-#### install ManiGaussian requirements
-    pip install "pip<24.1"
-    pip install -r requirements.txt
-
-#### install other utility packages
-    pip install packaging==21.3 dotmap pyhocon wandb==0.14.0 chardet opencv-python-headless gpustat ipdb visdom sentencepiece
-
-### install odise
-    pip install "setuptools<59"
-Install xformers (this version is a must to avoid errors from detectron2)
-
-    pip install xformers==0.0.18 
-Install detectron2:
-
-    cd ..
-    git clone https://github.com/facebookresearch/detectron2.git
-    cd detectron2
-    pip install -e .
-    cd ../ManiGaussian
-Install ODISE packages
-
-    cd third_party/ODISE
-    pip install -e .
-    cd ../..
-
-#### fix some possible problems
-Since a lot of packages are installed, there are some possible bugs. Use these commands first before running the code.
-
-    ~conda install pytorch==2.0.0 torchvision==0.15.0 torchaudio==2.0.0 pytorch-cuda=11.7 -c pytorch -c nvidia~
-    pip install -i https://pypi.tuna.tsinghua.edu.cn/simple torch==2.0.0+cu117 torchvision==0.15.0+cu117 torchaudio==2.0.0 --extra-index-url https://download.pytorch.org/whl/cu117
-
-    pip install hydra-core==1.1
-    pip install opencv-python-headless
-    pip install numpy==1.23.5
-    ~pip install numpy==1.26.4~
-
-#### install Gaussian Splatting Renderer
-    cd third_party/gaussian-splatting/
-    pip install -e submodules/diff-gaussian-rasterization
-    pip install -e submodules/simple-knn
-    cd ../..
-
-#### install Lightning Fabric
-不指定版本号会下载最新的lightning，这样会自动更新torch到2.4的cpu版本。
-    pip install lightning==2.2.1
+错误发生在 CoppeliaSim 的库文件 (libcoppeliaSim.so.1) 中。
+错误与 /usr/lib/x86_64-linux-gnu/dri/swrast_dri.so 相关，这是 Mesa 3D 图形库的一部分，用于软件渲染。
+QMutex: destroying locked mutex 指示存在一个互斥量在其被销毁时仍处于锁定状态的问题。
