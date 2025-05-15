@@ -528,7 +528,6 @@ ModuleNotFoundError: No module named 'lightning_utilities'
 AttributeError: module 'torch' has no attribute 'compiler'
 > /home/quantumxiaol/anaconda3/envs/manigaussian/lib/python3.9/site-packages/lightning/pytorch/trainer/connectors/logger_connector/result.py(355)_ResultCollection()
 -> @torch.compiler.disable
-
 AttributeError: module 'torch' has no attribute 'compiler'
 
 python -c "import torch; print(torch.__version__); print(hasattr(torch, 'compiler'))"
@@ -550,8 +549,7 @@ torch.compile() 的作用
 
 运行RLBench，在CoppeliaSim中显示closejar任务，内存错误
 
-Error: signal 11:
-
+>Error: signal 11:
 /home/quantumxiaol/CoppeliaSim_Edu_V4_1_0_Ubuntu20_04/libcoppeliaSim.so.1(_Z11_segHandleri+0x30)[0x70851ef0aae0]
 /lib/x86_64-linux-gnu/libc.so.6(+0x42520)[0x708571242520]
 /usr/lib/x86_64-linux-gnu/dri/swrast_dri.so(+0x1888d40)[0x70850b688d40]
@@ -758,3 +756,143 @@ QMutex: destroying locked mutex
 错误发生在 CoppeliaSim 的库文件 (libcoppeliaSim.so.1) 中。
 错误与 /usr/lib/x86_64-linux-gnu/dri/swrast_dri.so 相关，这是 Mesa 3D 图形库的一部分，用于软件渲染。
 QMutex: destroying locked mutex 指示存在一个互斥量在其被销毁时仍处于锁定状态的问题。
+
+我尝试安装qt5.12.5
+
+在https://download.qt.io/archive/qt/5.12/5.12.5/qt-opensource-linux-x64-5.12.5.run.torrent 下载qt5.12.5的运行文件
+
+添加
+
+    export PATH="/home/quantumxiaol/Qt5.12.5/5.12.5/gcc_64/bin:$PATH"
+    export QT_PLUGIN_PATH="/home/quantumxiaol/Qt5.12.5/5.12.5/gcc_64/plugins"
+    export LD_LIBRARY_PATH="/home/quantumxiaol/Qt5.12.5/5.12.5/gcc_64/lib:$LD_LIBRARY_PATH"
+
+执行 `source ~/.bashrc`，执行`qmake --version`查看安装情况
+
+还是同样的signal 11报错。
+
+先排查conda的问题，运行`conda list | grep "conda-forge\|<develop>"`查看由conda安装的包
+
+>(manigaussian) (base) quantumxiaol@APL-Laptop:~$ conda list | grep "conda-forge\|<develop>"
+ca-certificates           2025.4.26            hbd8a1cb_0    conda-forge
+clip                      1.0                       dev_0    <develop>
+colorama                  0.4.6              pyhd8ed1ab_1    conda-forge
+detectron2                0.6                       dev_0    <develop>
+diff-gaussian-rasterization 0.0.0                     dev_0    <develop>
+freetype                  2.10.4               h0708190_1    conda-forge
+fvcore                    0.1.5.post20221221    pyhd8ed1ab_0    conda-forge
+jbig                      2.1               h7f98852_2003    conda-forge
+jpeg                      9e                   h0b41bf4_3    conda-forge
+lcms2                     2.12                 hddcbb42_0    conda-forge
+lerc                      2.2.1                h9c3ff4c_0    conda-forge
+libblas                   3.9.0           31_h59b9bed_openblas    conda-forge
+libcblas                  3.9.0           31_he106b2a_openblas    conda-forge
+libdeflate                1.7                  h7f98852_5    conda-forge
+libgcc                    15.1.0               h767d61c_2    conda-forge
+libgcc-ng                 15.1.0               h69a702a_2    conda-forge
+libgfortran               15.1.0               h69a702a_2    conda-forge
+libgfortran5              15.1.0               hcea5267_2    conda-forge
+libgomp                   15.1.0               h767d61c_2    conda-forge
+liblapack                 3.9.0           31_h7ac8fdf_openblas    conda-forge
+libopenblas               0.3.29          pthreads_h94d23a6_0    conda-forge
+libpng                    1.6.37               h21135ba_2    conda-forge
+libstdcxx                 15.1.0               h8f9b012_2    conda-forge
+libtiff                   4.3.0                hf544144_1    conda-forge
+libwebp-base              1.5.0                h851e524_0    conda-forge
+lz4-c                     1.9.3                h9c3ff4c_1    conda-forge
+odise                     0.1                       dev_0    <develop>
+olefile                   0.47               pyhd8ed1ab_1    conda-forge
+openjpeg                  2.4.0                hb52868f_1    conda-forge
+openssl                   3.5.0                h7b32b05_1    conda-forge
+portalocker               3.0.0            py39hf3d152e_0    conda-forge
+pyrep                     4.1.0.3                   dev_0    <develop>
+python_abi                3.9                      2_cp39    conda-forge
+pytorch3d                 0.7.8                     dev_0    <develop>
+pyyaml                    6.0.2            py39h9399b63_2    conda-forge
+rlbench                   1.2.0                     dev_0    <develop>
+simple-knn                0.0.0                     dev_0    <develop>
+tabulate                  0.9.0              pyhd8ed1ab_2    conda-forge
+termcolor                 3.1.0              pyhd8ed1ab_0    conda-forge
+tqdm                      4.67.1             pyhd8ed1ab_1    conda-forge
+yacs                      0.1.8              pyh29332c3_2    conda-forge
+yaml                      0.2.5                h7f98852_2    conda-forge
+yarr                      0.1                       dev_0    <develop>
+zstd                      1.5.0                ha95c52a_0    conda-forge
+
+不是conda的问题。swrast_dri.so 是一个 DRI（Direct Rendering Infrastructure）驱动，用于在没有合适的硬件加速支持时，提供基于软件的 OpenGL 渲染功能。
+
+运行`glxinfo | grep "OpenGL"`查看当前系统的 OpenGL 信息
+
+>OpenGL vendor string: Microsoft Corporation
+OpenGL renderer string: D3D12 (NVIDIA GeForce RTX 4080 Laptop GPU)
+OpenGL core profile version string: 4.2 (Core Profile) Mesa 23.2.1-1ubuntu3.1~22.04.3
+OpenGL core profile shading language version string: 4.20
+OpenGL core profile context flags: (none)
+OpenGL core profile profile mask: core profile
+OpenGL core profile extensions:
+OpenGL version string: 4.2 (Compatibility Profile) Mesa 23.2.1-1ubuntu3.1~22.04.3
+OpenGL shading language version string: 4.20
+OpenGL context flags: (none)
+OpenGL profile mask: compatibility profile
+OpenGL extensions:
+OpenGL ES profile version string: OpenGL ES 3.1 Mesa 23.2.1-1ubuntu3.1~22.04.3
+OpenGL ES profile shading language version string: OpenGL ES GLSL ES 3.10
+OpenGL ES profile extensions:
+
+执行`ldd /home/quantumxiaol/CoppeliaSim_Edu_V4_1_0_Ubuntu20_04/libcoppeliaSim.so.1` 检测链接到了哪些共享库
+
+>quantumxiaol@APL-Laptop:~$ ldd /home/quantumxiaol/CoppeliaSim_Edu_V4_1_0_Ubuntu20_04/libcoppeliaSim.so.1
+        linux-vdso.so.1 (0x00007fffd459c000)
+        liblua5.1.so => /home/quantumxiaol/CoppeliaSim_Edu_V4_1_0_Ubuntu20_04/liblua5.1.so (0x00007f7f81a00000)
+        libQt5OpenGL.so.5 => /home/quantumxiaol/Qt5.12.5/5.12.5/gcc_64/lib/libQt5OpenGL.so.5 (0x00007f7f81600000)
+        libQt5Widgets.so.5 => /home/quantumxiaol/Qt5.12.5/5.12.5/gcc_64/lib/libQt5Widgets.so.5 (0x00007f7f80c00000)
+        libQt5Gui.so.5 => /home/quantumxiaol/Qt5.12.5/5.12.5/gcc_64/lib/libQt5Gui.so.5 (0x00007f7f80200000)
+        libQt5Network.so.5 => /home/quantumxiaol/Qt5.12.5/5.12.5/gcc_64/lib/libQt5Network.so.5 (0x00007f7f7fe00000)
+        libQt5SerialPort.so.5 => /home/quantumxiaol/Qt5.12.5/5.12.5/gcc_64/lib/libQt5SerialPort.so.5 (0x00007f7f7fa00000)
+        libQt5Core.so.5 => /home/quantumxiaol/Qt5.12.5/5.12.5/gcc_64/lib/libQt5Core.so.5 (0x00007f7f7f200000)
+        libGL.so.1 => /lib/x86_64-linux-gnu/libGL.so.1 (0x00007f7f82b4c000)
+        libpthread.so.0 => /lib/x86_64-linux-gnu/libpthread.so.0 (0x00007f7f82b47000)
+        libstdc++.so.6 => /lib/x86_64-linux-gnu/libstdc++.so.6 (0x00007f7f7ee00000)
+        libm.so.6 => /lib/x86_64-linux-gnu/libm.so.6 (0x00007f7f82a5e000)
+        libgcc_s.so.1 => /lib/x86_64-linux-gnu/libgcc_s.so.1 (0x00007f7f81be0000)
+        libc.so.6 => /lib/x86_64-linux-gnu/libc.so.6 (0x00007f7f7ea00000)
+        libz.so.1 => /lib/x86_64-linux-gnu/libz.so.1 (0x00007f7f81bc4000)
+        libdl.so.2 => /lib/x86_64-linux-gnu/libdl.so.2 (0x00007f7f81bbf000)
+        libicui18n.so.56 => /home/quantumxiaol/Qt5.12.5/5.12.5/gcc_64/lib/libicui18n.so.56 (0x00007f7f7e400000)
+        libicuuc.so.56 => /home/quantumxiaol/Qt5.12.5/5.12.5/gcc_64/lib/libicuuc.so.56 (0x00007f7f7e000000)
+        libicudata.so.56 => /home/quantumxiaol/Qt5.12.5/5.12.5/gcc_64/lib/libicudata.so.56 (0x00007f7f7c600000)
+        libgthread-2.0.so.0 => /lib/x86_64-linux-gnu/libgthread-2.0.so.0 (0x00007f7f81bb8000)
+        libglib-2.0.so.0 => /lib/x86_64-linux-gnu/libglib-2.0.so.0 (0x00007f7f818c6000)
+        /lib64/ld-linux-x86-64.so.2 (0x00007f7f82be0000)
+        libGLdispatch.so.0 => /lib/x86_64-linux-gnu/libGLdispatch.so.0 (0x00007f7f81548000)
+        libGLX.so.0 => /lib/x86_64-linux-gnu/libGLX.so.0 (0x00007f7f81b82000)
+        libpcre.so.3 => /lib/x86_64-linux-gnu/libpcre.so.3 (0x00007f7f814d2000)
+        libX11.so.6 => /lib/x86_64-linux-gnu/libX11.so.6 (0x00007f7f80ac0000)
+        libxcb.so.1 => /lib/x86_64-linux-gnu/libxcb.so.1 (0x00007f7f81b58000)
+        libXau.so.6 => /lib/x86_64-linux-gnu/libXau.so.6 (0x00007f7f81b52000)
+        libXdmcp.so.6 => /lib/x86_64-linux-gnu/libXdmcp.so.6 (0x00007f7f81b48000)
+        libbsd.so.0 => /lib/x86_64-linux-gnu/libbsd.so.0 (0x00007f7f81b30000)
+        libmd.so.0 => /lib/x86_64-linux-gnu/libmd.so.0 (0x00007f7f818b9000)
+
+Qt5OpenGL 是一个封装 OpenGL 的模块，如果它编译时链接的是 Mesa 的 GL，则会绕过 NVIDIA 的 GL 实现。Qt5 对 WSLg 的支持不如 Qt6 成熟。
+
+运行`strace -f -e openat python /home/quantumxiaol/fix_demo.py 2>&1 | grep 'swrast'`追踪是谁调用了swrast
+
+>[pid 15363] openat(AT_FDCWD, "/usr/lib/x86_64-linux-gnu/dri/tls/swrast_dri.so", O_RDONLY|O_CLOEXEC) = -1 ENOENT (No such file or directory)
+[pid 15363] openat(AT_FDCWD, "/usr/lib/x86_64-linux-gnu/dri/swrast_dri.so", O_RDONLY|O_CLOEXEC) = 8
+/usr/lib/x86_64-linux-gnu/dri/swrast_dri.so(+0xc25f7d)[0x77896d625f7d]
+
+仍在试图使用 Mesa 的软件渲染库而不是 NVIDIA 的 OpenGL 实现
+
+export GALLIUM_DRIVER=d3d12
+export MESA_D3D12_DEFAULT_ADAPTER_NAME=NVIDIA
+
+`sudo nano /usr/share/glvnd/egl_vendor.d/10_nvidia.json`创建
+接着，在 nano 编辑器中输入内容：
+
+    {
+        "file_format_version": "1.0.0",
+        "ICD": {
+            "library_path": "libGLX_nvidia.so.0"
+        }
+    }
