@@ -33,7 +33,7 @@
 
 
 # Linux 系统安装
-安装Ubuntu系统
+安装Ubuntu系统，以双系统为例，假定已经存在了windows系统，且拥有windows的PE盘，用于恢复引导。
 ## 制作启动盘
 下载 Ubuntu 镜像
 https://ubuntu.com/download/desktop
@@ -52,7 +52,62 @@ https://ubuntu.com/download/desktop
 
 按不出来可以在windows设置-更新和安全-恢复-高级启动 重启电脑，从USB设备恢复
 ## 安装Ubuntu
-配置系统安装到什么磁盘的区域
+配置系统安装到什么磁盘的区域，对于双系统而言，选择引导加载器安装放在windows盘的efi的区域。挂载root到空闲分区，文件系统类型可以选ext4。
+配置完成后，点击安装，安装完成后，重启，移除安装介质，进入Ubuntu系统。
+如果出现grub引导的命令行，可以输入
+
+        chainloader (hdX,Y)/EFI/Microsoft/Boot/bootmgfw.efi
+        boot
+
+进入Windows，如果错误（找不到系统）可以使用PE盘恢复windows引导。
+或者输入
+
+        linux (hdX,Y)/boot/vmlinuz-X.X.X-XX-generic root=/dev/sdXY
+        initrd (hdX,Y)/boot/initrd.img-X.X.X-XX-generic
+        boot
+(hdX,Y)指的是包含Linux内核的分区。不过可能太杂找不到哪个是哪个。
+
+更改正常后进入GRUB界面，一般可以选择ubuntu、windows、ubuntu高级选项，在ubuntu中修改grub以修改默认进入的系统。
+        sudo nano /etc/default/grub
+
+可以将 GRUB_DEFAULT 设置为想要默认启动的操作系统在GRUB菜单中的位置索引（从0开始计数）。运行`sudo update-grub`更改生效。
+
+# 添加新用户
+运行`sudo adduser newuser`添加新用户，
+运行`sudo usermod -aG sudo newuser`给予sudo权限。
 
 # 配置虚拟环境[参照WSL](../WSL/readme.md)
+全量安装完成后默认是有nvidia的驱动的，可以输入`nvidia-smi`查看。
+安装流程类似WSL，但仓库地址不一样，需要修改。主要的差别在于WSL没有nvidia的图形输出。
+
 安装CUDA和Anaconda
+
+为cuda添加仓库（ubuntu22.04）
+
+        wget https://developer.download.nvidia.com/compute/cuda/repos/ubuntu2204/x86_64/cuda-ubuntu2204.pin
+        sudo mv cuda-ubuntu2204.pin /etc/apt/preferences.d/cuda-repository-pin-600
+        wget https://developer.download.nvidia.com/compute/cuda/11.7.0/local_installers/cuda-repo-ubuntu2204-11-7-local_11.7.0-515.43.04-1_amd64.deb
+        sudo dpkg -i cuda-repo-ubuntu2204-11-7-local_11.7.0-515.43.04-1_amd64.deb
+        sudo cp /var/cuda-repo-ubuntu2204-11-7-local/cuda-*-keyring.gpg /usr/share/keyrings/
+        sudo apt-get update
+
+安装 CUDA 工具包
+
+    sudo apt-get update
+    sudo apt-get install -y cuda
+
+配置环境变量
+
+    nano ~/.bashrc
+在文件最后添加以下内容：
+
+    export PATH=/usr/local/cuda/bin:$PATH
+    export LD_LIBRARY_PATH=/usr/local/cuda/lib64:$LD_LIBRARY_PATH
+
+运行 `source ~/.bashrc` 使环境变量生效
+
+验证安装
+
+    nvidia-smi
+    nvcc --version
+输出GPU和CUDA的信息。
