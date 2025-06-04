@@ -78,11 +78,39 @@ https://ubuntu.com/download/desktop
 
 # 配置虚拟环境[参照WSL](../WSL/readme.md)
 全量安装完成后默认是有nvidia的驱动的，可以输入`nvidia-smi`查看。
-安装流程类似WSL，但仓库地址不一样，需要修改。主要的差别在于WSL没有nvidia的图形输出。
+
+如果出现
+>done.
+done.
+正在处理用于 dbus (1.12.20-2ubuntu4.1) 的触发器 ...
+在处理时有错误发生：
+ nvidia-dkms-515
+ cuda-drivers-515
+ cuda-drivers
+ nvidia-driver-515
+ cuda-runtime-11-7
+ cuda-demo-suite-11-7
+ cuda-11-7
+ cuda
+E: Sub-process /usr/bin/dpkg returned an error code (1)
+
+
+可以运行`ubuntu-drivers devices`查看可用驱动，如果没有可先添加`sudo add-apt-repository ppa:graphics-drivers/ppa`，运行`sudo apt install nvidia-driver-570`安装一个新的驱动。
+如果是内核版本不匹配`dpkg --list | grep linux-image`查看内核，
+>rc  linux-image-5.15.0-1079-nvidia              5.15.0-1079.80                          amd64        Signed kernel image nvidia
+ii  linux-image-6.2.0-26-generic                6.2.0-26.26~22.04.1                     amd64        Signed kernel image generic
+ii  linux-image-6.8.0-60-generic                6.8.0-60.63~22.04.1                     amd64        Signed kernel image generic
+ii  linux-image-generic-hwe-22.04               6.8.0-60.63~22.04.1                     amd64        Generic Linux kernel image
+
+进入旧内核卸载新内核
+sudo apt remove linux-image-6.8.0-60-generic linux-headers-6.8.0-60-generic
+sudo update-grub
+
+其他安装流程类似WSL，但仓库地址不一样，需要修改。主要的差别在于WSL没有nvidia的图形输出。
 
 安装CUDA和Anaconda
 
-为cuda添加仓库（ubuntu22.04）
+为cuda添加仓库（ubuntu22.04，需要更换驱动）
 
         wget https://developer.download.nvidia.com/compute/cuda/repos/ubuntu2204/x86_64/cuda-ubuntu2204.pin
         sudo mv cuda-ubuntu2204.pin /etc/apt/preferences.d/cuda-repository-pin-600
@@ -94,7 +122,8 @@ https://ubuntu.com/download/desktop
 安装 CUDA 工具包
 
     sudo apt-get update
-    sudo apt-get install -y cuda
+    ~~sudo apt-get install -y cuda~~
+    sudo apt-get install cuda-toolkit-11-7
 
 配置环境变量
 
@@ -111,3 +140,9 @@ https://ubuntu.com/download/desktop
     nvidia-smi
     nvcc --version
 输出GPU和CUDA的信息。
+
+运行`nvcc helloworld.cu -o helloworld`编译helloworld，运行`./helloworld`查看输出
+
+        Hello World from CPU!
+        Hello World from GPU!
+说明正常。
