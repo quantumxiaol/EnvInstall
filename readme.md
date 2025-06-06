@@ -12,10 +12,14 @@ python venv、anaconda、miniconda、uv
 使用Git和GitHub
 ## [实例](./EnvInstallEg/readme.md) 
 为一些项目安装环境
-- [ManiGaussian](./EnvInstallEg/EnvInstallEg\ManiGaussian.md)在Windows和WSL都无法使用，Windows无法使用Pyrep，WSL使用RLBench会报渲染错误。
+- [ManiGaussian](./EnvInstallEg/ManiGaussian.md)在Windows和WSL都无法使用，Windows无法使用Pyrep，WSL使用RLBench会报渲染错误。
+- [DeerFlow](./EnvInstallEg/DeerFlow.md)字节推出的，使用uv可以轻松部署。
 
 # 环境检查
 运行`python envtest.py`检查Python版本、GPU信息、CUDA版本、Pytorch版本、Pytorch安装情况；setuptools、pip、ninja等工具的信息。
+
+# 语言配置
+## [HelloWorld](./HelloWorld/readme.md)
 
 # 前言
 ## 环境变量

@@ -141,7 +141,7 @@ sudo update-grub
     nvcc --version
 输出GPU和CUDA的信息。
 
-运行`nvcc helloworld.cu -o helloworld`编译helloworld，运行`./helloworld`查看输出
+运行`nvcc ./HelloWorld/helloworld_cuda.cu -o helloworld`编译helloworld，运行`./helloworld`查看输出
 
         Hello World from CPU!
         Hello World from GPU!
