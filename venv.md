@@ -75,6 +75,10 @@ https://github.com/astral-sh/uv
         cargo install --git https://github.com/astral-sh/uv uv
 
         uv --version
+## 添加环境变量
+
+        export PATH="$HOME/.local/bin:$PATH"
+
 
 ## 使用
         # 默认创建 .venv 目录

@@ -1371,3 +1371,135 @@ ii  mesa-vdpau-drivers:amd64        23.2.1-1ubuntu3.1~22.04.3               amd6
 这说明在使用 Microsoft 的 Direct3D 12 (D3D12) 驱动，并通过 Mesa 提供 OpenGL 支持。
 
 运行
+
+
+## 使用Ubuntu安装
+### 运行RLBench示例
+>(manigaussian) lxl@lxl-Lenovo:~/MG$ python ManiGaussian/third_party/RLBench/examples/single_task_rl.py
+Reset Episode
+['reach the red target', 'touch the red ball with the panda gripper', 'reach the red sphere']
+[-0.09218847  0.15086247 -0.0382969  -0.14304494 -0.00387287 -0.04638115
+  0.00897694  1.        ]
+Traceback (most recent call last):
+  File "/home/lxl/MG/ManiGaussian/third_party/RLBench/examples/single_task_rl.py", line 42, in <module>
+    obs, reward, terminate = task.step(action)
+  File "/home/lxl/MG/ManiGaussian/third_party/RLBench/rlbench/task_environment.py", line 99, in step
+    self._action_mode.action(self._scene, action)
+  File "/home/lxl/MG/ManiGaussian/third_party/RLBench/rlbench/action_modes/action_mode.py", line 35, in action
+    self.arm_action_mode.action(scene, arm_action, ignore_collisions)
+TypeError: action() takes 3 positional arguments but 4 were given
+QObject::~QObject: Timers cannot be stopped from another thread
+QMutex: destroying locked mutex
+Error: signal 11:
+/home/lxl/MG/CoppeliaSim_Edu_V4_1_0_Ubuntu20_04/libcoppeliaSim.so.1(_Z11_segHandleri+0x30)[0x7f46e610aae0]
+/lib/x86_64-linux-gnu/libc.so.6(+0x42520)[0x7f4710c42520]
+/home/lxl/MG/CoppeliaSim_Edu_V4_1_0_Ubuntu20_04/libQt5Gui.so.5(_ZN15QGuiApplication13primaryScreenEv+0x13)[0x7f46e434b463]
+/home/lxl/MG/CoppeliaSim_Edu_V4_1_0_Ubuntu20_04/libQt5Gui.so.5(_ZN7QCursor3posEv+0x9)[0x7f46e4361b49]
+/home/lxl/MG/CoppeliaSim_Edu_V4_1_0_Ubuntu20_04/libcoppeliaSim.so.1(_ZN13COpenglWidget38_handleMouseAndKeyboardAndResizeEventsEPvi+0x84b)[0x7f46e65294eb]
+/home/lxl/MG/CoppeliaSim_Edu_V4_1_0_Ubuntu20_04/libcoppeliaSim.so.1(_ZN13COpenglWidget16_timer100ms_fireEv+0xbf)[0x7f46e652b84f]
+/home/lxl/MG/CoppeliaSim_Edu_V4_1_0_Ubuntu20_04/libQt5Core.so.5(_ZN11QMetaObject8activateEP7QObjectiiPPv+0x659)[0x7f46e349fac9]
+/home/lxl/MG/CoppeliaSim_Edu_V4_1_0_Ubuntu20_04/libQt5Core.so.5(_ZN6QTimer7timeoutENS_14QPrivateSignalE+0x27)[0x7f46e34ac787]
+/home/lxl/MG/CoppeliaSim_Edu_V4_1_0_Ubuntu20_04/libQt5Core.so.5(_ZN6QTimer10timerEventEP11QTimerEvent+0x28)[0x7f46e34aca58]
+/home/lxl/MG/CoppeliaSim_Edu_V4_1_0_Ubuntu20_04/libQt5Core.so.5(_ZN7QObject5eventEP6QEvent+0x7b)[0x7f46e34a09db]
+
+使用gdb检查
+> <-Type <RET> for more, q to quit, c to continue without paging--
+For help, type "help".
+Type "apropos word" to search for commands related to "word"...
+Reading symbols from python...
+Starting program: /home/lxl/anaconda3/envs/manigaussian/bin/python ManiGaussian/third_party/RLBench/examples/single_task_rl.py
+[Thread debugging using libthread_db enabled]
+Using host libthread_db library "/lib/x86_64-linux-gnu/libthread_db.so.1".
+[New Thread 0x7ffff3fff640 (LWP 42040)]
+[New Thread 0x7ffff37fe640 (LWP 42041)]
+[New Thread 0x7ffff0ffd640 (LWP 42042)]
+[New Thread 0x7fffee7fc640 (LWP 42043)]
+[New Thread 0x7fffe9ffb640 (LWP 42044)]
+[New Thread 0x7fffe97fa640 (LWP 42045)]
+[New Thread 0x7fffe6ff9640 (LWP 42046)]
+[New Thread 0x7fffe47f8640 (LWP 42047)]
+[New Thread 0x7fffe1ff7640 (LWP 42048)]
+[New Thread 0x7fffdd7f6640 (LWP 42049)]
+[New Thread 0x7fffdcff5640 (LWP 42050)]
+[New Thread 0x7fffd87f4640 (LWP 42051)]
+[New Thread 0x7fffd7ff3640 (LWP 42052)]
+[New Thread 0x7fffd37f2640 (LWP 42053)]
+[New Thread 0x7fffd0ff1640 (LWP 42054)]
+[New Thread 0x7fffc75ff640 (LWP 42055)]
+[New Thread 0x7fffc5fd3640 (LWP 42056)]
+[New Thread 0x7fffbffff640 (LWP 42057)]
+[New Thread 0x7fffbf7fe640 (LWP 42058)]
+[New Thread 0x7fffa13ff640 (LWP 42060)]
+[New Thread 0x7fff91dff640 (LWP 42063)]
+Reset Episode
+['reach the red target', 'touch the red ball with the panda gripper', 'reach the red sphere']
+[-0.06036199 -0.07500775  0.05743916 -0.02199129  0.01278853  0.10599649
+ -0.08668112  1.        ]
+Traceback (most recent call last):
+  File "/home/lxl/MG/ManiGaussian/third_party/RLBench/examples/single_task_rl.py", line 42, in <module>
+    obs, reward, terminate = task.step(action)
+  File "/home/lxl/MG/ManiGaussian/third_party/RLBench/rlbench/task_environment.py", line 99, in step
+    self._action_mode.action(self._scene, action)
+  File "/home/lxl/MG/ManiGaussian/third_party/RLBench/rlbench/action_modes/action_mode.py", line 35, in action
+    self.arm_action_mode.action(scene, arm_action, ignore_collisions)
+TypeError: action() takes 3 positional arguments but 4 were given
+[Thread 0x7fff91dff640 (LWP 42063) exited]
+[Thread 0x7fffa13ff640 (LWP 42060) exited]
+QObject::~QObject: Timers cannot be stopped from another thread
+QMutex: destroying locked mutex
+[Thread 0x7ffff0ffd640 (LWP 42042) exited]
+[Thread 0x7fffd0ff1640 (LWP 42054) exited]
+[Thread 0x7fffd37f2640 (LWP 42053) exited]
+[Thread 0x7fffd7ff3640 (LWP 42052) exited]
+[Thread 0x7fffd87f4640 (LWP 42051) exited]
+[Thread 0x7fffdcff5640 (LWP 42050) exited]
+[Thread 0x7fffdd7f6640 (LWP 42049) exited]
+[Thread 0x7fffe1ff7640 (LWP 42048) exited]
+[Thread 0x7fffe47f8640 (LWP 42047) exited]
+[Thread 0x7fffe6ff9640 (LWP 42046) exited]
+[Thread 0x7fffe97fa640 (LWP 42045) exited]
+[Thread 0x7fffe9ffb640 (LWP 42044) exited]
+[Thread 0x7fffee7fc640 (LWP 42043) exited]
+[Thread 0x7ffff37fe640 (LWP 42041) exited]
+[Thread 0x7ffff3fff640 (LWP 42040) exited]
+Thread 17 "python" received signal SIGSEGV, Segmentation fault.
+[Switching to Thread 0x7fffc75ff640 (LWP 42055)]
+0x00007fffcb34b463 in QGuiApplication::primaryScreen() () from /home/lxl/MG/CoppeliaSim_Edu_V4_1_0_Ubuntu20_04/libQt5Gui.so.5
+(gdb) bt full
+#0  0x00007fffcb34b463 in QGuiApplication::primaryScreen() ()
+   from /home/lxl/MG/CoppeliaSim_Edu_V4_1_0_Ubuntu20_04/libQt5Gui.so.5
+No symbol table info available.
+#1  0x00007fffcb361b49 in QCursor::pos() ()
+   from /home/lxl/MG/CoppeliaSim_Edu_V4_1_0_Ubuntu20_04/libQt5Gui.so.5
+No symbol table info available.
+#2  0x00007fffcd5294eb in COpenglWidget::_handleMouseAndKeyboardAndResizeEvents(void*, int) () from /home/lxl/MG/CoppeliaSim_Edu_V4_1_0_Ubuntu20_04/libcoppeliaSim.so.1
+No symbol table info available.
+#3  0x00007fffcd52b84f in COpenglWidget::_timer100ms_fire() ()
+   from /home/lxl/MG/CoppeliaSim_Edu_V4_1_0_Ubuntu20_04/libcoppeliaSim.so.1
+No symbol table info available.
+#4  0x00007fffca49fac9 in QMetaObject::activate(QObject*, int, int, void**) ()
+
+CoppeliaSim 在一个定时器回调函数 _timer100ms_fire() 中调用了 GUI 相关的 Qt 函数。
+其中调用了 QCursor::pos() 和 QGuiApplication::primaryScreen()。
+这些函数试图访问当前屏幕和鼠标状态，但此时可能没有可用的 GUI 上下文（例如无头模式未启用），从而导致段错误。
+
+LD_DEBUG=libs python ManiGaussian/third_party/RLBench/examples/single_task_rl.py > debug_output.log 2>&1
+
+grep 'libQt5Gui' debug_output.log
+     42265:	find library=libQt5Gui.so.5 [0]; searching
+     42265:	  trying file=/usr/local/cuda/lib64/libQt5Gui.so.5
+     42265:	  trying file=glibc-hwcaps/x86-64-v3/libQt5Gui.so.5
+     42265:	  trying file=glibc-hwcaps/x86-64-v2/libQt5Gui.so.5
+     42265:	  trying file=tls/haswell/x86_64/libQt5Gui.so.5
+     42265:	  trying file=tls/haswell/libQt5Gui.so.5
+     42265:	  trying file=tls/x86_64/libQt5Gui.so.5
+     42265:	  trying file=tls/libQt5Gui.so.5
+     42265:	  trying file=haswell/x86_64/libQt5Gui.so.5
+     42265:	  trying file=haswell/libQt5Gui.so.5
+     42265:	  trying file=x86_64/libQt5Gui.so.5
+     42265:	  trying file=libQt5Gui.so.5
+     42265:	  trying file=/home/lxl/MG/CoppeliaSim_Edu_V4_1_0_Ubuntu20_04/libQt5Gui.so.5
+     42265:	calling init: /home/lxl/MG/CoppeliaSim_Edu_V4_1_0_Ubuntu20_04/libQt5Gui.so.5
+/home/lxl/MG/CoppeliaSim_Edu_V4_1_0_Ubuntu20_04/libQt5Gui.so.5(_ZN15QGuiApplication13primaryScreenEv+0x13)[0x7fe07d74b463]
+/home/lxl/MG/CoppeliaSim_Edu_V4_1_0_Ubuntu20_04/libQt5Gui.so.5(_ZN7QCursor3posEv+0x9)[0x7fe07d761b49]
+
