@@ -132,6 +132,7 @@ sudo update-grub
 
     export PATH=/usr/local/cuda/bin:$PATH
     export LD_LIBRARY_PATH=/usr/local/cuda/lib64:$LD_LIBRARY_PATH
+    export CUDA_HOME=/usr/local/cuda
 
 运行 `source ~/.bashrc` 使环境变量生效
 
@@ -146,3 +147,5 @@ sudo update-grub
         Hello World from CPU!
         Hello World from GPU!
 说明正常。
+
+别人已经安装了CUDA的情况下，运行`ls /usr/local | grep cuda`查看位置颁布，添加到bashrc即可。
