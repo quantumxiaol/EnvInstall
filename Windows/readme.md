@@ -136,9 +136,9 @@ https://mirrors.aliyun.com/anaconda/pkgs/main/
 
 默认情况下，pip 在安装包时会为构建过程创建一个隔离的环境（即子进程）。这可能导致子进程无法访问父进程中的依赖项（如 torch）。通过使用 `--no-build-isolation` 选项禁用构建隔离，可以让构建过程直接使用当前环境中的包。
 
-#### pip
+#### pip升级
 
-运行`python.exe -m pip install --upgrade pip`
+运行`python.exe -m pip install --upgrade pip`升级
 
 pip是Python的包管理工具，用于安装、更新和卸载Python包。
 

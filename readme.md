@@ -16,7 +16,7 @@ python venv、anaconda、miniconda、uv
 
 使用Git和GitHub
 
-## [实例](./EnvInstallEg/readme.md) 
+## [实例](./EnvInstallEg/readme.md)
 
 为一些项目安装环境
 

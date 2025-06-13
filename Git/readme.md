@@ -69,9 +69,27 @@ git clone --recurse-submodules [仓库地址]
 如果在特性分支上工作，而基础分支上的某些更改影响了当前工作（比如引入了一个 bug 或者改变了 API），可以通过变基快速重新应用更改，并解决任何出现的问题。
 
 ### 冲突处理
+
 冲突通常发生在两个或多个分支对同一文件的同一部分进行了不同的修改，并且尝试将这些分支合并或变基时。Git 无法自动决定应采用哪个版本的更改，因此需要人工介入来解决这种冲突。
 
 如果在不同的分支中只是添加了空行，而这些空行的添加没有导致实际内容在同一位置发生冲突，那么通常情况下 Git 不会产生冲突。
+
+### https和ssh
+
+运行`git remote -v`查看远程仓库的 URL，然后根据 URL 的前缀来选择使用哪种协议（http 或 ssh）。
+
+运行`git remote set-url origin git@*****.com:****/****.git`
+
+运行`git pull --tags origin main`
+
+配置本机的ssh 配置
+
+    Host git**
+        HostName git**
+        User git
+        IdentityFile ~/.ssh/id_rsa  # 指定你的私钥文件路径
+
+这样把仓库的 URL 更改为 ssh，可以免去输入密码。
 
 ## Git 进阶操作
 

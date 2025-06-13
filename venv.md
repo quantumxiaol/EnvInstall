@@ -71,8 +71,7 @@ venv模块是Python标准库的一部分，从Python 3.3版本开始就已包含
 
 ## uv (by Astral)
 
-是 一个新的超快 Python 包管理器和构建工具，由 Rust 编写，旨在替代 pip、poetry、setuptools 等传统工具。
-https://github.com/astral-sh/uv
+[uv](https://github.com/astral-sh/uv)是一个新的超快 Python 包管理器和构建工具，由 Rust 编写，旨在替代 pip、poetry、setuptools 等传统工具。
 
 比 pip 快 10~100x（得益于 Rust 实现）。
 支持虚拟环境创建。
