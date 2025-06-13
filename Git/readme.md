@@ -1,18 +1,32 @@
-# 使用Git
-## 设置用户名和邮箱（全局配置）：
+# Git&Github
+
+## 使用Git
+
+### 设置用户名和邮箱（全局配置）：
+
     git config --global user.name "你的名字"
     git config --global user.email "你的邮箱地址"
 
-## 克隆仓库
+### 创建SSH密钥
+
+    ssh-keygen -t rsa -b 4096 -C "你的邮箱地址"
+
+把公钥上传到GitHub中，linux在`~/.ssh/id_rsa.pub`，windows在`C:\Users\用户名\.ssh\id_rsa.pub`中
+
+### 克隆仓库
+
 git clone [仓库地址]
 
 深克隆，有时一个仓库会链接另一个仓库
 
 git clone --recurse-submodules [仓库地址]
 
-# 使用GitHub
+## 使用GitHub
+
 当git配置的用户名和邮箱与GitHub的账户一致时，会自动绑定。
-## 网络代理
+
+### 网络代理
+
 有时需要配置Git以使用服务器作为HTTP/HTTPS代理
 
     git config --global http.proxy 'http://localhost:代理端口号'
@@ -28,9 +42,10 @@ git clone --recurse-submodules [仓库地址]
     git config --global --unset http.proxy
     git config --global --unset https.proxy
 
-# 项目拉取
+## 项目拉取
 
-## 命令
+### 命令
+
 `git pull`
 用于从远程仓库获取最新的更改并将其合并到当前分支。它实际上是两个命令的组合：`git fetch`（获取远程更新）加上`git merge`（将这些更新合并到当前分支）。
 
@@ -53,13 +68,15 @@ git clone --recurse-submodules [仓库地址]
 修复上游问题
 如果在特性分支上工作，而基础分支上的某些更改影响了当前工作（比如引入了一个 bug 或者改变了 API），可以通过变基快速重新应用更改，并解决任何出现的问题。
 
-## 冲突处理
+### 冲突处理
 冲突通常发生在两个或多个分支对同一文件的同一部分进行了不同的修改，并且尝试将这些分支合并或变基时。Git 无法自动决定应采用哪个版本的更改，因此需要人工介入来解决这种冲突。
 
 如果在不同的分支中只是添加了空行，而这些空行的添加没有导致实际内容在同一位置发生冲突，那么通常情况下 Git 不会产生冲突。
 
-# Git 进阶操作
-## 拉取远程更新并保留本地未提交的工作
+## Git 进阶操作
+
+### 拉取远程更新并保留本地未提交的工作
+
 当在一个新分支上工作并创建了一些新文件但尚未提交，同时远程仓库有了新的更新（比如别人修复了bug），可以按照以下步骤来拉取最新的更改并保留本地未提交的工作：
 
 保存当前工作状态，如果已经对某些文件执行了 git add 但是还没有提交，可以使用 git stash 来保存这些更改。
@@ -78,8 +95,10 @@ git clone --recurse-submodules [仓库地址]
 恢复之前的工作，使用 `git stash pop` 来恢复之前保存的工作状态（包括新文件和已暂存的更改）。
 如果有冲突，Git 会通知你哪些文件存在冲突。需要手动编辑这些文件来解决冲突。
 
-## 分支操作
-### 创建分支
+### 分支操作
+
+#### 创建分支
+
 创建一个新分支但不自动切换到该分支：
 
     git branch <branch-name>
@@ -89,12 +108,16 @@ git clone --recurse-submodules [仓库地址]
 或者使用 Git 版本 2.23 及以上推荐的 switch 命令：
 
     git switch -c <branch-name>
-### 切换分支
+
+#### 切换分支
+
 切换到已有分支，checkout或者switch：
 
     git checkout <branch-name>
     git switch <branch-name>
-### 查看分支
+
+#### 查看分支
+
 列出所有本地分支：
 
     git branch
@@ -104,11 +127,15 @@ git clone --recurse-submodules [仓库地址]
 查看当前分支及其最近提交的信息：
 
     git branch -v
-### 合并分支
+
+#### 合并分支
+
 将指定分支合并到当前分支：
 
     git merge <branch-name>
-### 删除分支
+
+#### 删除分支
+
 删除本地分支（需先切换出目标分支）：
 
     git branch -d <branch-name>
@@ -118,21 +145,27 @@ git clone --recurse-submodules [仓库地址]
 删除远程分支：
 
     git push origin --delete <branch-name>
-### 更新分支信息
+
+#### 更新分支信息
+
 从远程更新本地分支列表：
 
     git fetch
 同步远程分支到本地（假设你想让本地分支与远程分支保持一致）：
 
     git pull origin <branch-name>
-### 重命名分支
+
+#### 重命名分支
+
 重命名当前分支：
 
     git branch -m <new-branch-name>
 重命名指定分支（需要先切换出目标分支）：
 
     git branch -m <old-branch-name> <new-branch-name>
-### 变基（Rebase）
+
+#### 变基（Rebase）
+
 变基是一种将一个分支上的更改应用到另一个分支之上的方法，它可以用来使提交历史更加线性。
 
 将当前分支变基到目标分支之上：
@@ -142,7 +175,9 @@ git clone --recurse-submodules [仓库地址]
 
     git rebase -i HEAD~n
 其中 n 表示你想要回顾的最近几次提交的数量。
-### 设置上游分支
+
+#### 设置上游分支
+
 克隆了一个仓库后，默认情况下 origin/master 是 master 的上游分支。但是如果创建了一个新的本地分支，可能需要设置它的上游分支以便于推送和拉取操作。
 
 为本地分支设置上游分支：
@@ -151,7 +186,9 @@ git clone --recurse-submodules [仓库地址]
 简写形式：
 
     git push -u origin <branch-name>
-### 比较分支
+
+#### 比较分支
+
 比较两个分支之间的差异：
 
     git diff <branch1>..<branch2>
@@ -159,7 +196,8 @@ git clone --recurse-submodules [仓库地址]
 
     git branch --contains <commit-id>
 
-## 删除远程仓库的关联
+### 删除远程仓库的关联
+
     git remote remove origin
 
 接下来不需要与任何远程仓库交互的话（例如推送或拉取更新），只是用来下好执行，可以移除与远程仓库的关联。这不会影响当前本地的工作目录和版本历史记录，但会阻止~菜鸟~意外地将更改推送到远程仓库，~你也不想自己的代码被推到公共仓库吧~。
