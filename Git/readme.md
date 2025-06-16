@@ -74,23 +74,6 @@ git clone --recurse-submodules [仓库地址]
 
 如果在不同的分支中只是添加了空行，而这些空行的添加没有导致实际内容在同一位置发生冲突，那么通常情况下 Git 不会产生冲突。
 
-### https和ssh
-
-运行`git remote -v`查看远程仓库的 URL，然后根据 URL 的前缀来选择使用哪种协议（http 或 ssh）。
-
-运行`git remote set-url origin git@*****.com:****/****.git`
-
-运行`git pull --tags origin main`
-
-配置本机的ssh 配置
-
-    Host git**
-        HostName git**
-        User git
-        IdentityFile ~/.ssh/id_rsa  # 指定你的私钥文件路径
-
-这样把仓库的 URL 更改为 ssh，可以免去输入密码。
-
 ## Git 进阶操作
 
 ### 拉取远程更新并保留本地未提交的工作
@@ -219,3 +202,44 @@ git clone --recurse-submodules [仓库地址]
     git remote remove origin
 
 接下来不需要与任何远程仓库交互的话（例如推送或拉取更新），只是用来下好执行，可以移除与远程仓库的关联。这不会影响当前本地的工作目录和版本历史记录，但会阻止~菜鸟~意外地将更改推送到远程仓库，~你也不想自己的代码被推到公共仓库吧~。
+
+### http仓库转ssh仓库
+
+运行`git remote -v`查看远程仓库的 URL，然后根据 URL 的前缀来选择使用哪种协议（http 或 ssh）。
+
+运行`git remote set-url origin git@*****.com:****/****.git`
+
+运行`git pull --tags origin main`
+
+配置本机的ssh 配置
+
+    Host git**
+        HostName git**
+        User git
+        IdentityFile ~/.ssh/id_rsa  # 指定你的私钥文件路径
+
+这样把仓库的 URL 更改为 ssh，可以免去输入密码。
+
+### clone别人的仓库
+
+克隆了一个不是自己的 GitHub 仓库，
+
+在本地创建一个分支
+
+    git branch -vv
+    git checkout -b feat-my-local
+
+对代码进行修改（只保留在本地）
+
+    git add .
+    git commit -m "My local changes"
+
+将来还能从远端拉取更新（如 main 或其他分支的更新）
+
+    git fetch origin
+    git checkout main
+    git merge origin/main
+
+    git checkout my-local-changes
+    git merge main
+在保留本地修改的同时，保持与上游仓库同步。
