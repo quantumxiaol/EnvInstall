@@ -222,6 +222,8 @@ git clone --recurse-submodules [仓库地址]
 
 ### clone别人的仓库
 
+#### 不同步到远端
+
 克隆了一个不是自己的 GitHub 仓库，
 
 在本地创建一个分支
@@ -243,3 +245,65 @@ git clone --recurse-submodules [仓库地址]
     git checkout my-local-changes
     git merge main
 在保留本地修改的同时，保持与上游仓库同步。
+
+#### 同步到远端
+
+基于远程 dev 创建本地分支 dev-feat-new
+
+提交代码到本地 dev-feat-new
+
+将 dev-feat-new 合并到本地 dev
+
+将本地 dev 推送到远程仓库
+
+1. 获取远程最新信息
+
+    git fetch origin
+
+2. 创建并切换到基于远程 dev 的新分支
+
+    git checkout -b dev-feat-new origin/dev
+
+创建一个名为 dev-feat-new 的本地分支，跟踪远程的 dev 分支。
+
+如果已经有本地的 dev 分支，并想让它跟踪远程的 dev，可以使用：
+
+    git branch --set-upstream-to=origin/dev dev
+
+3. 开发并提交你的代码到 dev-feat-new
+
+    git add .
+    git commit -m "Add new feature in dev-feat-new"
+
+4. 切换回本地 dev 分支并合并 dev-feat-new
+
+    git checkout dev
+    git merge dev-feat-new
+
+5. 推送本地 dev 到远程仓库
+
+    git push origin dev
+
+如果是第一次推送 dev 分支到远程，可以设置追踪关系：
+
+    git push -u origin dev
+
+定期拉取更新以保持同步
+在开发过程中，建议定期拉取远程 dev 的更新以减少冲突：
+
+    git checkout dev
+    git pull origin dev
+
+然后可以 rebase 或 merge 到你的 dev-feat-new 分支。
+
+    git branch -vv
+
+查看远程分支列表：
+
+    git remote show origin
+
+删除本地分支（完成后）：
+
+    git branch -d dev-feat-new
+
+如果使用`git push -u origin dev-feat-new`可以自动推送到远端仓库，同时在远端仓库中创建一个名为 dev-feat-new 的分支，并设置它的上游分支为 origin/dev。
