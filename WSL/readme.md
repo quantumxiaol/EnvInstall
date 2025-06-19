@@ -89,7 +89,8 @@ CUDA11.7
 
     chmod +x Anaconda3-2024.10-1-Linux-x86_64.sh
     ./Anaconda3-2024.10-1-Linux-x86_64.sh
-默认安装路径为 ~/anaconda3
+默认安装路径为 ~/anaconda3，参数-p指定路径。
+例如`./Anaconda3-2024.10-1-Linux-x86_64.sh -p /mnt/.anaconda`将安装到/mnt/.anaconda
 
 初始化
 
