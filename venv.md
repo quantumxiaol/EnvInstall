@@ -128,7 +128,7 @@ venv模块是Python标准库的一部分，从Python 3.3版本开始就已包含
 
         # 从测试好的环境中生成uvlock
         uv pip freeze > requirements.txt
-        uv pip compile requirements.txt --universal --output-file requirements_lock.txt
+        # uv pip compile requirements.txt --universal --output-file requirements_lock.txt
 
         # 获取最小的依赖包极其版本
         python envextract.py requirements.txt requirements_lock.txt requirements_mini.txt

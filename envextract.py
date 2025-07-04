@@ -20,7 +20,9 @@ def load_packages(filename):
             line = line.strip()
             if not line or line.startswith("#"):
                 continue
-            package_name = line.split("==")[0].strip()
+            # package_name = line.split("==")[0].strip()
+            package_name = line.split("==")[0].split(">=")[0].split("<=")[0].strip()
+
             if package_name:
                 packages.add(normalize_name(package_name))
     return packages
