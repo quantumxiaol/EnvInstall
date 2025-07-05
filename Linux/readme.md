@@ -191,3 +191,13 @@ sudo update-grub
 运行`nvidia-smi`查看GPU信息，可以看到显存和显存使用情况。
 
 运行`nvcc --version`查看CUDA版本。
+
+
+# 实用软件
+## 实时网速
+
+
+## 安装Steam
+`sudo apt install libgl1-mesa-dri:i386 libgl1-mesa-glx:i386`安装32位库
+在download下运行`sudo dpkg -i ~/Downloads/steam_latest.deb`
+`sudo apt --fix-broken install`修复依赖
