@@ -129,8 +129,12 @@ nano 使用ctrl+O保存写入，ctrl+X保存并退出
 编辑frps配置文件 
 
     vi frpc.toml
+    sudo vi /usr/local/frp/frp_0.63.0_linux_amd64/frpc.toml
+
     # or
     nano frpc.toml
+    sudo nano /usr/local/frp/frp_0.63.0_linux_amd64/frpc.toml
+
 
 添加内容
 
@@ -154,8 +158,8 @@ nano 使用ctrl+O保存写入，ctrl+X保存并退出
     name = "L4D2"
     type = "udp"
     localIP = "127.0.0.1"
-    localPort = 27315
-    remotePort = 27315
+    localPort = 27015
+    remotePort = 27015
     
     # Minecraft
     [[proxies]]
@@ -164,6 +168,22 @@ nano 使用ctrl+O保存写入，ctrl+X保存并退出
     localIP = "127.0.0.1"
     localPort = 25565
     remotePort = 25565
+
+    # MCSManager
+    [[proxies]]
+    name = "MCSManager1"
+    type = "tcp"
+    localIP = "127.0.0.1"
+    localPort = 23333
+    remotePort = 23333
+
+    # MCSManager
+    [[proxies]]
+    name = "MCSManager2"
+    type = "tcp"
+    localIP = "127.0.0.1"
+    localPort = 24444
+    remotePort = 24444
 
 验证文件是否正确
 
