@@ -167,13 +167,17 @@ nano 使用ctrl+O保存写入，ctrl+X保存并退出
 
 验证文件是否正确
 
-    /usr/local/frp/frp_0.62.1_linux_amd64/frpc verify -c /usr/local/frp/frp_0.62.1_linux_amd64/frpc.toml
+    /usr/local/frp/frp_0.63.0_linux_amd64/frpc verify -c /usr/local/frp/frp_0.63.0_linux_amd64/frpc.toml
 
 ### 启动
 
+    sudo chmod +x /usr/local/frp/frp_0.63.0_linux_amd64/frpc
+
+    sudo chmod +x frpc
+
     ./frpc -c frpc.toml
 
-    ./usr/local/frp/frp_0.63.0_linux_amd64/frpc -c frpc.toml
+    /usr/local/frp/frp_0.63.0_linux_amd64/frpc -c frpc.toml
 
 创建 Systemd 服务文件
 
@@ -203,5 +207,7 @@ nano 使用ctrl+O保存写入，ctrl+X保存并退出
     sudo systemctl stop frpc
     # 重启frp 
     sudo systemctl restart frpc
-    #设置开机自启
+    # 设置开机自启
     sudo systemctl enable frpc
+    # 查看状态
+    sudo systemctl status frpc
