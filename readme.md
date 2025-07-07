@@ -8,6 +8,12 @@
 
 Linux系统安装、CUDA环境配置
 
+一些软件、服务的配置
+- [FRP](./Linux/frp.md)部署内网穿透
+- [Minecraft](./Linux/minecraft.md)部署MC
+- [Net Proxy](./Linux/net.md)部署代理加速访问
+- [qBittorrent](./Linux/qbit.md)部署种子下载
+
 ## [虚拟环境管理](./venv.md)
 
 python venv、anaconda、miniconda、uv
@@ -44,15 +50,3 @@ python venv、anaconda、miniconda、uv
 和输入 `/path/to/python.exe helloworld.py`
 是一样的，后者可以直接找到python解释器，用解释器执行helloworld.py。设置python的环境变量，就是让windows知道如何执行python。
 
-## 安装结果
-
-### WSL
-
-安装NVIDIA
-<img src="./png/img_nvidia.png">
-
-WSL安装CUDA的结果
-<img src="./png/img_nvcc.png">
-
-安装Anaconda
-<img src="./png/img_anaconda.png">
