@@ -16,12 +16,26 @@
 
 接着在防火墙中放行23333和24444两个默认端口，25565为MC java默认端口，27015为L4D2默认端口。
 
+    sudo ufw status
+
+    # 如果显示未启用，可以启用
+    # 只要有一个防火墙工作就可以，无论是云服务器管理还是服务器本地的
+    sudo ufw enable
+    # 添加SSH端口
+    sudo ufw allow OpenSSH
+    # 或者指定端口号
+    sudo ufw allow 22/tcp
+
+    sudo ufw allow 23333/tcp
+    sudo ufw allow 24444/tcp
+    sudo ufw allow 25565/tcp
+    sudo ufw allow 27015/udp
 
 在浏览器中输入 服务器公网ip:23333即可进入MCSManager面板控制台。
 
 ## 搭建MC服务器
 
-应用实例-新建应用-MC Java服务端，上传服务端，以paper为例，在https://papermc.io/downloads下载得到对应版本的jar文件，上传文件，
+应用实例-新建应用-MC Java服务端，上传服务端，以paper为例，在[paper](https://papermc.io/downloads)下载得到对应版本的jar文件，上传文件，
 
 启动命令填写
 
