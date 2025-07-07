@@ -128,9 +128,9 @@ nano 使用ctrl+O保存写入，ctrl+X保存并退出
 
 编辑frps配置文件 
 
-    vi frps.toml
+    vi frpc.toml
     # or
-    nano frps.toml
+    nano frpc.toml
 
 添加内容
 
@@ -174,3 +174,34 @@ nano 使用ctrl+O保存写入，ctrl+X保存并退出
     ./frpc -c frpc.toml
 
     ./usr/local/frp/frp_0.63.0_linux_amd64/frpc -c frpc.toml
+
+创建 Systemd 服务文件
+
+    sudo nano /etc/systemd/system/frpc.service
+
+添加下面的路径，和上面的区别在于一个是c，一个是s
+
+    [Unit]
+    Description=Frp Client Service
+    After=network.target
+    
+    [Service]
+    Type=simple
+    User=nobody
+    ExecStart=/usr/local/frp/frp_0.63.0_linux_amd64/frpc -c /usr/local/frp/frp_0.63.0_linux_amd64/frpc.toml
+    Restart=on-failure
+    RestartSec=5s
+    
+    [Install]
+    WantedBy=multi-user.target
+
+### FRP client 管理
+
+    # 启动frp 
+    sudo systemctl start frpc
+    # 停止frp 
+    sudo systemctl stop frpc
+    # 重启frp 
+    sudo systemctl restart frpc
+    #设置开机自启
+    sudo systemctl enable frpc
