@@ -56,6 +56,8 @@
     export_dir_root=/home/qbittorrent/Completed/
     ScanDirs=@Invalid()
 
+如果手动写明文密码，qBittorrent 会忽略它，仍然使用默认密码 adminadmin
+
 创建并给予这些权限
 
     sudo mkdir -p /home/qbittorrent/{Downloads,Torrents,Completed}
