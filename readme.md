@@ -13,8 +13,12 @@ Linux系统安装、CUDA环境配置
 - [Minecraft](./Linux/minecraft.md)部署MC
 - [Net Proxy](./Linux/net.md)部署代理加速访问
 - [qBittorrent](./Linux/qbit.md)部署种子下载
+- [wordpress](./Linux/wordpress.md)部署博客
 
-## [虚拟环境管理](./venv.md)
+## Environment
+- [包管理](./Environment/package.md)
+- [C/C++环境配置](./Environment/C_CPP_Env.md)
+- [Python虚拟环境管理](./Environment/Python_Env.md)
 
 python venv、anaconda、miniconda、uv
 
