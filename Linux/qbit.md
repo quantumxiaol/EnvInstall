@@ -56,7 +56,7 @@
     export_dir_root=/home/qbittorrent/Completed/
     ScanDirs=@Invalid()
 
-如果手动写明文密码，qBittorrent 会忽略它，仍然使用默认密码 adminadmin
+如果手动写明文密码，qBittorrent 会忽略它，仍然使用默认密码 adminadmin，设置Proxy才需要填入上面的conf，一般情况下可以选择初始化时默认创建的东西。
 
 创建并给予这些权限
 
@@ -97,3 +97,11 @@
 检查服务状态：
 
     sudo systemctl status qbittorrent
+
+重置密码
+
+    sudo systemctl stop qbittorrent
+    sudo mv /home/qbittorrent/.config/qBittorrent/qBittorrent.conf /home/qbittorrent/.config/qBittorrent/qBittorrent.conf.bak
+    sudo -u qbittorrent qbittorrent-nox
+
+重新初始化
